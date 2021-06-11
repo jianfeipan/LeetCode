@@ -20,6 +20,7 @@ class Solution {
 private:
     std::queue<Node*> levelA;
     std::queue<Node*> levelB;
+    //double queue seems easy to implement, but can be replace by one queue and a counter, which read the initial size of the queue, then do a for loop instead of looping all elements in a queue.
     
     static Node * pop(std::queue<Node*> & currentLevel, std::queue<Node*> & nextLevel )
     {
