@@ -1,3 +1,4 @@
+#include <algorithm>
 /**
  * Definition for a binary tree node.
  */
@@ -75,6 +76,14 @@ private:
             return findMax(root->right);
         else
             return root;
+    }
+
+    int hight(TreeNode * root)
+    {
+        if(root == nullptr)
+            return 0;
+        return std::max(hight(root->left), hight(root->right)) +1;
+
     }
 
 public:
@@ -180,4 +189,40 @@ public:
         }
         return root;
     }
+	
+
+    bool isBanlanced(TreeNode * root)
+    {
+        if(root == nullptr)
+            return true;
+        int res =abs(hight(root->left) - hight(root->right));
+        return res < 2 && isBanlanced(root->left) && isBanlanced(root->right);//Notice here we recomputed hight value in sub trees
+    }
+
+    //To avoid the recomputation of hight in sub trees, better idea is to from bottom to top
+    static int isBanlancedHelper(TreeNode* root) {
+        if(root == nullptr)
+            return 0;
+
+        int lheight = isBanlancedHelper(root->left);
+        if(lheight == -1)
+            return -1;//stop to recusivly up computings because it's already not balanced
+
+        int rheight = isBanlancedHelper(root->right);
+        if(rheight == -1)
+            return -1;
+
+        if(abs(lheight - rheight) > 1) {
+            return -1;
+        }
+
+        return std::max(lheight, rheight) + 1;
+    }
+
+    bool isBanlanced2(TreeNode * root)
+    {
+        return isBanlancedHelper(root)!=-1;;
+    }
+ 
+
 };
