@@ -11,7 +11,7 @@
  */
 #include <queue>
 
-class Solution {
+class Solution_double_queue {
 private:
     std::queue<TreeNode*> levelA;
     std::queue<TreeNode*> levelB;
@@ -69,6 +69,46 @@ public:
 
                 levels.push_back(level);
 
+            }
+        }
+        return levels;
+        
+    }
+    
+    class Solution_single_queue {
+private:
+    std::queue<TreeNode*> queue;
+        
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) 
+    {
+        
+        vector<vector<int>> levels;
+        if(root)
+        {
+            queue.push(root);
+            while(!queue.empty())  
+            {
+                vector<int> level;
+                
+                const int levelSize =queue.size();
+                level.reserve(levelSize);
+                
+                for(int i = 0; i < levelSize; ++i)
+                {
+                    TreeNode * current = queue.front();
+                    queue.pop();
+                    level.push_back(current->val);
+                    if(current->left)
+                    {
+                        queue.push(current->left);
+                    }
+                    if(current->right)
+                    {
+                        queue.push(current->right);
+                    }
+                }
+                levels.push_back(level);
             }
         }
         return levels;
