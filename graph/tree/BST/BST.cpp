@@ -67,6 +67,16 @@ private:
         return isValide;
     }
 
+    TreeNode* findMax(TreeNode* root)
+    {
+        if(root == nullptr)
+            return nullptr;
+        if(root->right!=nullptr)
+            return findMax(root->right);
+        else
+            return root;
+    }
+
 public:
     //faster solution: from current to parent to find limits
     bool isValidBST(TreeNode* root) {
@@ -74,7 +84,7 @@ public:
     }
 	
 	
-	TreeNode * search(TreeNode * root, T val)
+	TreeNode * search(TreeNode * root, int val)
 	{
 		if(root == nullptr)
 			return nullptr;
@@ -82,11 +92,11 @@ public:
 			return root;
 		else if(val < root->val)
 			return search(root->left, val);
-		else if(val > root.val)
+		else if(val > root->val)
 			return search(root->right, val);
 	}
 	
-	TreeNode * search2(TreeNode * root, T val)
+	TreeNode * search2(TreeNode * root, int val)
 	{
 		TreeNode *  current = root;
 		while(current != nullptr)
@@ -95,12 +105,79 @@ public:
 				return current;
 			else if(val < current->val)
 				current = current->left;
-			else if(val > root.val)
+			else if(val > root->val)
 				current = current->right;
 		}
 		
 		return nullptr;
 	}
- 
+	
+	void insert(TreeNode * root, int val)
+	{
+		if(root == nullptr)
+			return;
+		
+		if(val == root->val)
+			return;
+		else if(val < root->val)
+		{
+			if(root->left == nullptr)
+			{
+				root->left = new TreeNode(val);
+			}
+			else{
+				insert(root->left, val);
+			}
+		}
+		else if(val > root->val)
+		{
+			if(root->right == nullptr)
+			{
+				root->right = new TreeNode(val);
+			}
+			else{
+				insert(root->right, val);
+			}
+		}
+	}
+	
+    //Attention here the return type, that returns the tree after removing the node, which allows to  recusivly call the remove function
+	TreeNode * remove(TreeNode * root, int val)
+    {  
+        if(root==nullptr)
+            return nullptr;
+        if(root->val<val)
+        {
+            //attention the return, to update left side
+            root->left = remove(root->left, val);
+        }
+        else if(root->val>val)
+        {
+            //attention the return, to update left side
+            root->right = remove(root->right, val);
+        }
+        else
+        {
+            if(root->left!=nullptr && root->right!=nullptr)
+            {
+                //Here we can put left branch's largest value then remove that one
+                //or we can put right branch's smallest value then remove that one
+                TreeNode * leftBranchLargest = findMax(root->left);
 
+                root->val = leftBranchLargest->val;
+
+                root->left = remove(root->left, root->val );
+            }
+            else
+            {
+                if(root->left!=nullptr)
+                    root = root->left;
+                else if(root->right!=nullptr)
+                    root = root->right;
+                else
+                    root = nullptr;//this nullptr will be return to uper level to remove current node
+            }
+        }
+        return root;
+    }
 };
