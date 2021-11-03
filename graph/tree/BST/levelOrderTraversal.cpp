@@ -74,8 +74,9 @@ public:
         return levels;
         
     }
-    
-    class Solution_single_queue {
+};
+
+class Solution_single_queue {
 private:
     std::queue<TreeNode*> queue;
         
