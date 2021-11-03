@@ -1,15 +1,16 @@
 /**
  * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
  */
-class ValidBST {
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class BST {
     
 private:
     TreeNode* mostLeft(TreeNode* root)
@@ -26,6 +27,19 @@ private:
             return root;
         else
             return mostRight(root->right);  
+    }
+    bool isValidBSTHelper(TreeNode* root, TreeNode* lefthigh, TreeNode* rightlow)
+    {
+        if(root == nullptr){
+            return true;
+        }
+        if(lefthigh != nullptr && root->val <= lefthigh->val){
+            return false;
+        }
+        if(rightlow != nullptr && root->val >= rightlow->val){
+            return false;
+        }
+        return isValidBSTHelper(root->right, root, rightlow) && isValidBSTHelper(root->left, lefthigh, root);
     }
     
 public:
@@ -55,20 +69,9 @@ public:
     
     //faster solution: from current to parent to find limits
     bool isValidBST(TreeNode* root) {
-        return helper(root, nullptr, nullptr); 
+        return isValidBSTHelper(root, nullptr, nullptr); 
     }
-    bool helper(TreeNode* root, TreeNode* lefthigh, TreeNode* rightlow){
-        if(root == nullptr){
-            return true;
-        }
-        if(lefthigh != nullptr && root->val <= lefthigh->val){
-            return false;
-        }
-        if(rightlow != nullptr && root->val >= rightlow->val){
-            return false;
-        }
-        return helper(root->right, root, rightlow) && helper(root->left, lefthigh, root);
-    }
+
  
 
 };
