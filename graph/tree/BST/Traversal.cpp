@@ -17,8 +17,41 @@ struct TreeNode {
 
 
 class BSTTranserval {
+ 
 public:
-    std::vector<std::vector<int>> levelOrder(TreeNode* root) 
+    static void writeNodeInLevelOrder(std::vector<std::vector<int>> & levels, TreeNode & root, int level)
+    {
+        if(levels.size() == level)
+        {
+            levels.push_back({});
+        }
+
+        levels[level].push_back(root.val);
+        
+        if(root.left != nullptr)
+        {
+            writeNodeInLevelOrder(levels, *root.left, level+1);
+        }
+        
+        if(root.right != nullptr)
+        {
+            writeNodeInLevelOrder(levels, *root.right, level+1);
+        }
+        
+    }
+
+    vector<vector<int>> levelOrderRecusive(TreeNode* root) {
+        vector<vector<int>> levels;
+        
+        if(root)
+        {
+            writeNodeInLevelOrder(levels, *root, 0);
+        }
+
+        return levels;
+    }
+ 
+    std::vector<std::vector<int>> levelOrderWithQueue(TreeNode* root) 
     {
         std::vector<std::vector<int>> levels;
         if(root)
