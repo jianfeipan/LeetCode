@@ -42,7 +42,7 @@ private:
         return isValidBSTHelper(root->right, root, rightlow) && isValidBSTHelper(root->left, lefthigh, root);
     }
     
-public:
+
     //from current  to children to find limits 
     bool isValidBST_1(TreeNode* root) 
     {
@@ -66,12 +66,41 @@ public:
         }
         return isValide;
     }
-    
+
+public:
     //faster solution: from current to parent to find limits
     bool isValidBST(TreeNode* root) {
         return isValidBSTHelper(root, nullptr, nullptr); 
     }
-
+	
+	
+	TreeNode * search(TreeNode * root, T val)
+	{
+		if(root == nullptr)
+			return nullptr;
+		if(val == root->val)
+			return root;
+		else if(val < root->val)
+			return search(root->left, val);
+		else if(val > root.val)
+			return search(root->right, val);
+	}
+	
+	TreeNode * search2(TreeNode * root, T val)
+	{
+		TreeNode *  current = root;
+		while(current != nullptr)
+		{
+			if(val == current->val)
+				return current;
+			else if(val < current->val)
+				current = current->left;
+			else if(val > root.val)
+				current = current->right;
+		}
+		
+		return nullptr;
+	}
  
 
 };
