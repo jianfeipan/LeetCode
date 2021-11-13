@@ -1,10 +1,44 @@
 class Solution {
   /*
-  Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature. If there is no future day for which this is possible, keep answer[i] == 0 instead.
+  Given an arry of unsigned int as stock prices, you will buy at a moment then sell it, compute the most big profit , if cannot make profit, it should return 0
   ex:
-  Input: temperatures = [73,74,75,71,69,72,76,73] Output: [1,1,4,2,1,1,0,0]
+  Input: temperatures = [2,3,1,4,2,3,6] Output: 5 (6-1) 
   */
 public:
-    vector<int> dailyTemperatures(vector<int>& temperatures) {
+    //O(N^2)
+    int bestProfit_solution1(const vector<int> prices) {
+        int bestProfit = 0;
+        for(int i = 0; i < prices.size(); ++i)
+        {
+            for(int j = i+1; j < prices.size(); ++j)
+            {
+                int profit = prices[j] - prices[i];
+                if(bestProfit<profit)
+                {
+                    bestProfit = profit;
+                }
+            }
+        }
     }
+    
+    int bestProfit(const vector<int> prices) {
+        int bestProfit = 0;
+        int minPrice = prices[0];
+        for(int i = 1; i < prices.size(); ++i)
+        {
+            if(prices[i]< minPrice)
+            {
+                minPrice = prices[i];
+            }
+            int profit = prices[i] - minPrice;
+            if(profit > bestProfit)
+            {
+                bestProfit = profit;
+            }
+        }
+        
+        return bestProfit;
+    }
+    
+    
 };
