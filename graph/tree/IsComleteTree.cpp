@@ -20,7 +20,7 @@ public:
         std::queue<TreeNode*> queue;
         queue.push(root);
         
-        bool unfompleteNodeFound = false;
+        bool nullFound = false;
         while(!queue.empty())
         {
             const size_t currentLevelSize = queue.size();
@@ -28,36 +28,26 @@ public:
             for(size_t i = 0; i < currentLevelSize; ++i)
             {
                 auto node = queue.front();
-                
-                if(unfompleteNodeFound)
+                queue.pop();
+                if(nullFound)
                 {
-                    if(node->left || node->right)
+                    if(node)
                         return false;
-                }
-
-                if(node->left && node->right)
-                {
-                    queue.push(node->left);
-                    queue.push(node->right);
-                    
-                }
-                else if(node->right)
-                {
-                    return false;
-                }
-                else if(node->left)
-                {
-                    queue.push(node->left);
-                    unfompleteNodeFound = true;
                 }
                 else
                 {
-                    unfompleteNodeFound = true;
+                    if(node)
+                    {
+                        queue.push(node->left);
+                        queue.push(node->right);
+                    }
+                    else
+                    {
+                        nullFound = true;
+                    }
                 }
-                queue.pop();
             }     
-            
-            bool hasNextLevel = !queue.empty();
+
         }
         
         return true;
