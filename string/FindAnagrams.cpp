@@ -41,6 +41,30 @@ std::vector<std::string> findAnagrams(const std::vector<std::string> & words)
     return anagrames;
 }
 
+std::vector<std::string> findAnagrams_linear(const std::vector<std::string> & words)
+{
+    std::vector<std::string> anagrames;
+    std::vector<std::vector<int>> charDigram=diagram(words);
+    
+    std::map<std::vector<int>, std::vector<std::string>> diams;
+    
+    for(int i = 0; i<words.size(); ++i)
+    {
+        diams[charDigram[i]].push_back(words[i]);
+    }//O(N)
+    
+    for(const auto & diam : diams)
+    {
+        if(diam.second.size()>=2)
+        {
+            anagrames.insert(anagrames.end(), diam.second.begin(), diam.second.end());
+        }
+    }
+    
+    //O(N*M)
+    return anagrames;
+}
+
 void test(const std::vector<std::string> & words)
 {
     std::cout<<"test: {";
