@@ -41,10 +41,24 @@ std::vector<std::string> findAnagrams(const std::vector<std::string> & words)
     return anagrames;
 }
 
+
+static std::vector<std::vector<int>> diagram(const std::vector<std::string> & words)
+{
+    std::vector<std::vector<int>> charDigram(words.size(), std::vector<int>(26, 0));
+    for(int i = 0; i<words.size(); ++i)
+    {
+        for(const auto & c : words[i])
+        {
+            charDigram[i][c-'a'] ++;
+        }
+    }//O(N*M)
+    return charDigram;
+}
+
 std::vector<std::string> findAnagrams_linear(const std::vector<std::string> & words)
 {
     std::vector<std::string> anagrames;
-    std::vector<std::vector<int>> charDigram=diagram(words);
+    std::vector<std::vector<int>> charDigram=diagram(words); // or we can use std::sort(word.begin(), word.end()); to fingerPrint the words
     
     std::map<std::vector<int>, std::vector<std::string>> diams;
     
