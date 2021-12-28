@@ -41,7 +41,44 @@ public:
      similar to the validation of parethese : ()(())(((()())))
      we need a stack
      
+     
+     another simpler solution is to sort in place than merge one by one
+     
      */
+
+    vector<vector<int>> merge_with_inplace_sort(vector<vector<int>>& intervals) 
+    {
+        vector<vector<int>> merged;
+        //sort intervals then merge one by one
+        sort(intervals.begin(), intervals.end(),[](const vector<int> & left, const vector<int> & right)
+             {
+                 return left[0]<right[0];
+             });
+        
+        vector<int> currentInterval = intervals[0];
+        
+        for(int i = 1; i<intervals.size(); ++i)
+        {
+            if(intervals[i][0]<= currentInterval[1])
+            {
+                currentInterval[1] = max(intervals[i][1], currentInterval[1]);
+            }
+            else
+            {
+                merged.push_back(currentInterval);
+                currentInterval = intervals[i];
+            }
+        }
+        merged.push_back(currentInterval);
+        
+        return merged;
+    }
+    
+
+    
+    
+    
+    
     vector<Interval> merge(vector<Interval> &intervals) {
         // map to sort then merge
         map<int, int> axe;
