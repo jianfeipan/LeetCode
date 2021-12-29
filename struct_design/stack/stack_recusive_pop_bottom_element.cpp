@@ -2,6 +2,12 @@
 #include <stack>
 
 
+/*
+
+use recusive call to invers a stack
+
+*/
+
 
 static void printStack(const std::stack<int> & s)
 {
