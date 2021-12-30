@@ -6,6 +6,9 @@ Return the minimum cost to fly every person to a city such that exactly n people
 [[10,20],[30,200],[400,50],[30,20]]
 [[515,563],[451,713],[537,709],[343,819],[855,779],[457,60],[650,359],[631,42]]
 [[259,770],[448,54],[926,667],[184,139],[840,118],[577,469]]
+
+
+https://en.wikipedia.org/wiki/Assignment_problem
 */
 
 class Solution {
