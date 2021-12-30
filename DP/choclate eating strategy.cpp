@@ -45,12 +45,39 @@ static int maxChoclateUtility_greedy(std::deque<int> choclates)
    return maxUtility;
 }
 
+static int maxChoclateUtility_recusive(const std::deque<int> & choclates, int day)
+{
+   if (choclates.empty())
+      return 0;
 
+   auto leftBranch = choclates;
+   int maxUtilityIfTakeLeft = leftBranch.front() * day;
+   leftBranch.pop_front();
+   maxUtilityIfTakeLeft += maxChoclateUtility_recusive(leftBranch, day + 1);
+
+
+   auto rightBranch = choclates;
+   int maxUtilityIfTakeRight = rightBranch.back() * day;
+   rightBranch.pop_back();
+   maxUtilityIfTakeRight += maxChoclateUtility_recusive(rightBranch, day + 1);
+
+   return std::max(maxUtilityIfTakeLeft, maxUtilityIfTakeRight);
+}
+
+static int maxChoclateUtility_DP_recusive(std::deque<int> choclates)
+{
+   return maxChoclateUtility_recusive(choclates, 1);
+}
 
 
 static int maxChoclateUtility(const std::deque<int> & choclates) 
 {
    int maxGreedy = maxChoclateUtility_greedy(choclates);
+   std::cout << std::endl << "greedy max utility: " << maxGreedy << std::endl;
+   
+   int maxDBrecusive = maxChoclateUtility_DP_recusive(choclates);
+
+   std::cout << std::endl << "max utility DB recusive: " << maxDBrecusive << std::endl;
    return maxGreedy;
 }
 
