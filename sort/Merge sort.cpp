@@ -64,9 +64,14 @@ static void process_merge_sort(std::vector<int> & s, int from, int to)
       return;
 
    int mid = (from + to) / 2; //>>1
-   process_merge_sort(s, from, mid);
-   process_merge_sort(s, mid + 1, to);
-   merge(s, from, mid, to);
+   process_merge_sort(s, from, mid);//T(N/2)
+   process_merge_sort(s, mid + 1, to);//T(N/2)
+   merge(s, from, mid, to);// O(N)
+   
+   
+   /*
+   T(N) = 2 * T(N/2) + O(N) = O(NlogN)
+   */
 }
 
 void merge_sort(std::vector<int> & s)
