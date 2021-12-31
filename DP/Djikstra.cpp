@@ -44,8 +44,11 @@ void dijkstra(const std::vector<std::vector<int>> & graph, int from)
    std::vector<bool> accessableTo(size, false);
    
    distanceTo[from] = 0;
-
-   for (int count = 0; count < size - 1; ++count){
+   //V: number of nodes, E: number of edges
+   //O(V^2)
+   //better can use min-priority queue to get O((E+V)logV)
+   for (int count = 0; count < size - 1; ++count)
+   {
 
       int closest = cloestNeighber(distanceTo, accessableTo);
       std::cout << "cloest " << closest << std::endl;
@@ -54,10 +57,10 @@ void dijkstra(const std::vector<std::vector<int>> & graph, int from)
       for (int i = 0; i < size; ++i)
       {
          //scanne all not connected nodes 
-         if (!accessableTo[i])
+         if (!accessableTo[i]) 
          {
             const int & distanceFromClosestNeighber = graph[closest][i];
-            //scanne all loest node's neighber
+            //scanne all closest node's neighber
             if (distanceFromClosestNeighber > 0)
             {
                const int distanceByClosestNeighber = distanceTo[closest] + distanceFromClosestNeighber;
@@ -75,7 +78,7 @@ void dijkstra(const std::vector<std::vector<int>> & graph, int from)
 }
 
 // driver program to test above function
-int main()
+int main_dijkstra()
 {
 
    /* Let us create the example graph discussed above */
