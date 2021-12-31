@@ -19,6 +19,8 @@ void BellmanFord(int graph[][3], int V, int E, int from)
    // Relax all edges |V| - 1 times. A simple
    // shortest path from src to any other
    // vertex can have at-most |V| - 1 edges
+
+   //O(EV)
    for (int i = 0; i < V - 1; i++) 
    {
       for (int j = 0; j < E; j++) {
