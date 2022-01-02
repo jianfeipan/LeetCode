@@ -37,7 +37,6 @@ static int maxChoclateUtility_greedy(std::deque<int> choclates)
 
    }
 
-   std::cout << std::endl << "max utility: " << maxUtility << std::endl;
    return maxUtility;
 }
 //T: O(N)
@@ -108,6 +107,63 @@ static int maxChoclateUtility_DP_with_memory(const std::vector<int> & choclates)
     return maxChoclateUtility_DP_with_memory_recusive(choclates, memory, 0, choclates.size()-1, 1);
 }
 
+void printMatrix(const std::vector<std::vector<std::pair<int, bool>>> & memory)
+{
+    for(const auto & line : memory)
+    {
+        for(const auto & e : line)
+        {
+            std::cout<<"\t"<<e.first;
+        }
+        std::cout<<std::endl;
+    }
+     std::cout<<std::endl;
+}
+
+static int maxChoclateUtility_DP_with_tablution(const std::vector<int> & choclates)
+{
+    //MaxUtility with i -> j left  and pickLeft : we need to memorise operation and score
+    std::vector<std::vector<std::pair<int, bool>>> memory(choclates.size() , std::vector<std::pair<int, bool>>(choclates.size(), {-1, false}));
+    
+    
+    for(int i = 0; i< choclates.size(); ++i)//last chocolate can be i in [0, N-1]
+    {
+        memory[i][i] = {choclates[i] * choclates.size(), false};
+    }
+    
+    for(int day = choclates.size() - 1; day>=1; day--)
+    {
+        for(int i = 0; i < day; ++i)
+        {
+            int from = i;
+            int to = from + (choclates.size() - day);//to - from =  rest days
+            
+   
+            /* [from, to] on day is base on day+1's result
+            [from, to] 's next step could be [from+1, to] (pick left) or [from, to - 1] (pick right)
+            example: [0,1] 's next step could be pick left : [1,0] and pick right [0,0] 
+            
+            */
+            
+            //for example, if now we are on day = n-1, so the memoey[i][i] are aviliable, we can compute max for day = n-1
+            const int resultPickLeft = memory[from+1][to].first + choclates[from] * day;
+            const int resultPickRight = memory[from][to-1].first + choclates[to] * day ;
+            
+            if(resultPickLeft>=resultPickRight)
+            {
+                memory[from][to] =   {resultPickLeft, true}; 
+            }
+            else
+            {
+                memory[from][to] =   {resultPickRight, false};
+            }
+        }
+        printMatrix(memory);
+    }
+    
+    
+    return memory[0][choclates.size()-1].first;
+}
 
 
 static int maxChoclateUtility(const std::deque<int> & choclates) 
@@ -115,14 +171,19 @@ static int maxChoclateUtility(const std::deque<int> & choclates)
    int maxGreedy = maxChoclateUtility_greedy(choclates);
    std::cout << std::endl << "greedy max utility: " << maxGreedy << std::endl;
    
-   int maxDBrecusive = maxChoclateUtility_DP_with_memory(std::vector<int>(choclates.begin(), choclates.end()));
+   int maxDPrecusive = maxChoclateUtility_DP_with_memory(std::vector<int>(choclates.begin(), choclates.end()));
 
-   std::cout << std::endl << "max utility DP recusive: " << maxDBrecusive << std::endl;
+   std::cout << std::endl << "max utility DP memory recusive: " << maxDPrecusive << std::endl;
+   
+   int maxDPTabution = maxChoclateUtility_DP_with_tablution(std::vector<int>(choclates.begin(), choclates.end()));
+   std::cout << std::endl << "max utility DP tablution: " << maxDPTabution << std::endl;
+   
+   
    return maxGreedy;
 }
 
 int main()
 {
-   maxChoclateUtility({1,2,3,1,4,5,2,6});
+   maxChoclateUtility({1,2,7,1,4,5,2,6});
    return 0;
 }
