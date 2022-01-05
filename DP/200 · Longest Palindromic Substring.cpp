@@ -5,7 +5,10 @@ public:
      * @return: a string as the longest palindromic substring
      */
 
-    string longestPalindrome(string &s) {
+
+
+
+    string longestPalindrome_DP(string &s) {
         int len = s.length();
         vector<vector<int>> isPalindrome(len, vector<int>(len));
         int maxLen = 1;
@@ -47,12 +50,64 @@ public:
         return s.substr(start, maxLen);
     }
 
-    string longestPalindrome_brute_force(string &s) 
+    //_scann_centers
+    string longestPalindrome(string &s) //O(N^2)
     {
         /*
-        idea1 :  brute force : traversal all substrings : o(N^2) and check if is palindromic o(N^2 * N) = O(N^3)
+        travaseral all point, take them as center point and try to count from this center to left and right to get the maximum
+        
+        */ 
+        if(s.size()<=1) return s;
+        size_t maxLen = 1;
+        size_t maxStart = 0;
 
-        idea2 : "palindromic has many sub strings which are also palindromic ", find the longest palindromic from left, then jump to index after this sub string
+        auto countFrom = [s](int left, int right, size_t & maxLen, size_t & maxStart){
+
+                while(left>=0 && right<s.size() && s[left] == s[right])
+                {
+                    --left;
+                    ++right;
+                }
+                ++left;
+                --right;
+                const int len = right- left + 1;
+                if(maxLen < len)
+                {
+
+                    maxLen = len;
+                    maxStart = left;
+                }
+        };
+
+        for(size_t center = 1; center<s.size(); ++center)
+        {
+            //count "aba" patern
+            {
+                int left = center -1;
+                int right = center + 1;
+
+                countFrom(left, right, maxLen, maxStart);
+            }
+
+
+
+            //count "baab" patern
+            {
+                int left = center -1;
+                int right = center;
+
+                countFrom(left, right, maxLen, maxStart);
+
+            }
+        }
+        return s.substr(maxStart, maxLen);
+    }
+
+    string longestPalindrome_brute_force(string &s)  //O(N^3)
+    {
+        /*
+        idea1 :  cbrute force : traversal all substrings : o(N^2) and check if is palindromic o(N^2 * N) = O(N^3)
+
         
         
         */ 
