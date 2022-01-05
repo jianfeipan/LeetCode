@@ -23,7 +23,7 @@ public:
         
         priority_queue<pair<string,size_t>,
             vector<pair<string, size_t>>,
-            decltype(countLess)> maxHeap(countLess);
+            decltype(countLess)> maxHeap(countLess);//bydefault maxheap : with less = true cmp
 
         for(const auto & wordCount : counts)
         {
