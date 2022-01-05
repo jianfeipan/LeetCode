@@ -31,7 +31,7 @@ private:
         if(n==1) return x;
         else
         {
-            double result = myPowPositive(x * x, n/2);
+            double result = myPowPositive(x * x, n/2);//this is useful for trail call optimization
             if(n%2 == 1 )
                 result*=x;
 
@@ -39,4 +39,29 @@ private:
         }
         
     }
+    
+    /*another solution with pow(x, n / 2); instead of pow(x*x, n/2)*/
+    public double myPow(double x, int n) {
+        // write your code here
+        if (n >= 0) {
+            return pow(x, n);
+        } else {
+            return 1.0 / pow(x, n);
+        }
+    }
+    
+    public double pow(double x, int n) {
+        if (n == 0) {
+            return 1;
+        }
+        
+        double y = pow(x, n / 2);
+        if (n % 2 == 0) {
+            return y * y;
+        } else {
+            return y * y * x;
+        }
+    }
+    
+    
 };
