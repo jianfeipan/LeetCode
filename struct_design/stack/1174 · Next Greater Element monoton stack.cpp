@@ -7,10 +7,14 @@ public:
     int nextGreaterElement(int n) {
         if(n/10 == 0) return 0;
         /*
+            1174 · Next Greater Element monoton stack
+        
             idea: for example: 132 --> i need to swap 1 and 2, go get 213
             go from right to left, with a monoton stack
                     
-                   
+             最后一个位置开始，找到下降点，下降点之前的无需改动。
+                然后 这个点右边按降序排列，找到一个比当前点大的最小值，然后交换
+                还是把int 转成vector 比较好操作
         
         */
         
