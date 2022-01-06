@@ -11,6 +11,24 @@
  * }
  */
 
+/*
+
+Description
+Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+
+What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+
+
+- can we make change of the BST modifications？ K is a more static value, I mean we can design the tree as a tree with left side always have K element, so every time the kth smallest is the root
+when you do remove or insertion, just make sure the insertion and remove make the rotation of the root to keep k element on left.
+
+good: quick access the kth smallest number
+bad : tree is not well balanced and impact the efficiety of search
+
+
+
+*/
+
 class Solution {
 public:
     /**
