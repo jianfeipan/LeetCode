@@ -25,7 +25,7 @@ when you do remove or insertion, just make sure the insertion and remove make th
 good: quick access the kth smallest number
 bad : tree is not well balanced and impact the efficiety of search
 
-
+- we can add a count number in the node: to count the index from left, insert and remove will update these count in node.
 
 */
 
