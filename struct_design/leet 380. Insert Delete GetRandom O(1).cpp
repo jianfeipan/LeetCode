@@ -34,6 +34,6 @@ public:
         return nums[rand() % nums.size()];
     }
 private:
-    vector<int> nums;
-    unordered_map<int, int> m;
+    vector<int> nums;// random access : random modulo with vector!!!
+    unordered_map<int, int> m;// unique element with access o(1) ---> map/set
 };
