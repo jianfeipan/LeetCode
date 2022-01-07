@@ -105,6 +105,7 @@ static int mergeSmallerSum(std::vector<int> & s, int from, int mid, int to)
       if (s[left] < s[right])
       {
          merged[mergedIndex] = s[left];
+         //small sum is produced when we merge
          //left smaller than right, so this left element should be sumed N times where N is the number of element bigger than left, which is to-right+1
          sum += (to-right+1) * s[left];
          ++left;
