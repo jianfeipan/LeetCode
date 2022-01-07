@@ -90,6 +90,11 @@ example :
 
 result = 2 + 2 + 2+3+1
 
+idea: smaller element sum on left, we can transform it to find N number on right is bigger than me, so current element will be sumed N times
+
+by merge sort, in the merge step, we are comparing left and right element, and we can know how many bigger than me on right
+
+
 */
 static int mergeSmallerSum(std::vector<int> & s, int from, int mid, int to)
 {
