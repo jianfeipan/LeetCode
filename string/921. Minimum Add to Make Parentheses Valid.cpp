@@ -16,7 +16,27 @@ Return the minimum number of moves required to make s valid.
 "((("
   */
 public:
-    int minAddToMakeValid(string s) {
+  int minAddToMakeValid(string s) {
+      return minAddToMakeValid_counter(s);
+  }
+  
+  int minAddToMakeValid_counter(string s) {
+        int minAdd = 0;
+        int opens = 0;
+        
+        for(char c : s)
+        {
+            if(c==')')
+                if(opens==0) ++minAdd;
+                else --opens;
+            else 
+                ++opens;
+        }
+
+        
+        return minAdd + opens;
+    }
+    int minAddToMakeValid_stack(string s) {
         int minAdd = 0;
         stack<char> opens;
         
