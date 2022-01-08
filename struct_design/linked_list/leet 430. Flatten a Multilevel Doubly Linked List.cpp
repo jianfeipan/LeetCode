@@ -7,6 +7,11 @@ public:
     Node* next;
     Node* child;
 };
+
+
+
+[1,2,3,4,5,6,null,null,null,7,8,9,10,null,null,11,12]
+[1,null,2,null,3,null]
 */
 
 class Solution {
