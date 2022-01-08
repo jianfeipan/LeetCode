@@ -8,7 +8,7 @@ public:
     }
     
 public:
-    string decode(const string & s, int & i)
+    string decode(const string & s, int & i)//this is passed as reference is very trick : we want to continue on the string in recusive calls
     {
         
         string decoded;
