@@ -1,6 +1,64 @@
 class Solution {
 public:
-    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+    //idea1 is DFS + cycle detection
+    //idea2 is store nodes and the dependency coutns (indegree), if there is a 0, we take it, then we update -> recount, if no 0, there is a cycle
+    
+    
+    
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) 
+    {
+        
+        return findOrder_node_indegree(numCourses, prerequisites);
+    }
+    
+    vector<int> findOrder_node_indegree(int numCourses, vector<vector<int>>& prerequisites) 
+    {
+        unordered_map<int, Node> nodes;
+        for (const vector<int> prerequisite: prerequisites) {
+            nodes[prerequisite[1]].postRequests.push_back(prerequisite[0]);
+            nodes[prerequisite[0]].preRequestNb += 1;
+        }
+
+        vector<int> order;
+        
+        queue<int> sources;
+        //this queue is to note all the impacted nodes, which are possible nodes with  preRequestNb == 0, and they will impact other nodes
+        
+        //find the course with no dependency : preRequestNb == 0
+        for (int i = 0; i < numCourses; ++i) 
+        {
+            if (nodes[i].preRequestNb == 0) 
+            {
+                order.push_back(i);
+                sources.push(i);
+            }
+        }
+
+        while (!sources.empty()) 
+        {
+            int num_sources = sources.size();
+            for (int i = 0; i < num_sources; ++i) 
+            {
+                int source = sources.front();
+                sources.pop();
+                for (int postRequest : nodes[source].postRequests) 
+                {
+                    nodes[postRequest].preRequestNb -= 1;
+                    if (nodes[postRequest].preRequestNb == 0) 
+                    {
+                        order.push_back(postRequest);
+                        sources.push(postRequest);
+                    }
+                }
+            }
+        }
+
+        return order.size() == numCourses? order : vector<int>();
+    }
+
+
+    vector<int> findOrder_DFS(int numCourses, vector<vector<int>>& prerequisites) //O(E+V)
+    {
         std::map<int, std::set<int>> graph;
         for(const auto & dep : prerequisites)
         {
@@ -28,6 +86,13 @@ public:
     }
     
 private : 
+    
+    struct Node {
+        int preRequestNb = 0;//I depend on how many nodes
+        vector<int> postRequests;//who depends on me
+    };
+    
+    
     bool DFSHasCycle(int current, 
              std::map<int, std::set<int>> & graph, 
              std::vector<bool> & visited, 
