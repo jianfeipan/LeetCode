@@ -14,7 +14,7 @@ public:
         int maxLen = 1;
         int from = 0;
         int to = 1;
-        unordered_set<char> checked;
+        unordered_set<char> checked;//can be rpelaced by bitmap
         checked.insert(s[0]);
         while(to<s.size())
         {
