@@ -4,7 +4,7 @@ public:
     {
         int maxLen = 0;
         
-        unordered_set<char> current;
+        unordered_set<char> current;//can be replaced by bitmap bool[256]
         int left=0;
         int right = 0;
         
