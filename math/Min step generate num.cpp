@@ -28,6 +28,7 @@ followup : how to now the path
 #include "pch.h"
 #include <iostream>
 #include <queue>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 template<typename T>
@@ -44,10 +45,12 @@ static int minStepGenerate_BFS(int num)
    /*
    Idea : generate numbers from 1 with all pathes
             - use BFS to test if we have the target number in my depth : this depth is the min step number
+            - improvement : use a vector<bool>[N] or a set to  cache and avoid recomputations
    */
    queue<pair<int, vector<int>>> q_withPathes;
    q_withPathes.push({ 1, {1} });
    int minStep = 0;
+   unordered_set<int> cache;
 
    while (!q_withPathes.empty())
    {
@@ -62,11 +65,14 @@ static int minStepGenerate_BFS(int num)
             return minStep;
          }
          
+         if(cache.find(current.first * 2) == cache.end())
          {
             vector<int> path2(current.second);
             path2.push_back(2);
             q_withPathes.push({ current.first * 2, path2 });
          }
+
+         if (cache.find(current.first /3) == cache.end())
          {
             vector<int> path3(current.second);
             path3.push_back(3);
