@@ -11,7 +11,9 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include <unordered_map>
 #include <vector>
+
 
 using namespace std;
 
@@ -39,6 +41,8 @@ Output: []
 
 class Solution {
 
+
+   //imprivement!:  sub string may be resoved sevral times: cache
 public:
    vector<string> wordBreak(string s, vector<string>& wordDict)
    {
@@ -52,10 +56,12 @@ public:
    }
 
 private:
-
+   unordered_map<string, vector<string>> cache;
 
    vector<string> wordBreak(string s, const set<string> & words)
    {
+      if (cache.count(s)) return cache[s];
+
       vector<string> setences;
 
       if (words.count(s)) //a whole string is a word
@@ -72,6 +78,7 @@ private:
 
          }
       }
+      cache[s] = setences;
       return setences;
    }
 
