@@ -58,7 +58,7 @@ int countShips(const vector<vector<int>> & map, Point a, Point b)
       + countShips(map, {linMid+1, a.second}, {b.first, colMid })
       + countShips(map, {linMid+1, colMid+1}, b);
 
-
+   //T(N) =4 *  T(N/4) + O(1) ==> O(logN)
 }
 
 
