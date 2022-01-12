@@ -42,4 +42,39 @@ class Solution {
        
         return resultStartNode;
     }
+    
+    //another way to while
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        int carry = 0;
+        
+        ListNode * start = new ListNode();
+        auto * current = start;
+        
+        while(l1&&l2)
+        {
+            int result = l1->val+l2->val + carry;
+            current->next = new ListNode(result % 10);
+            carry = result / 10;
+            
+            l1=l1->next;l2=l2->next;current=current->next;
+        }
+        
+        auto rest = l1 ? l1 : l2;
+        
+        while(rest)
+        {
+            int result = rest->val + carry;
+            current->next = new ListNode(result % 10);
+            carry = result / 10;
+            
+            current=current->next;rest=rest->next;
+        }
+        if(carry)
+            current->next = new ListNode(carry);
+        
+        return start->next;
+        
+    }
+    
+    
 }
