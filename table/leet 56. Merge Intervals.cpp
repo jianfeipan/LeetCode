@@ -4,6 +4,8 @@ public:
     {
         vector<vector<int>> merged;
         //sort intervals then merge one by one
+        
+        // sort(intervals.begin(), intervals.end());
         sort(intervals.begin(), intervals.end(),[](const vector<int> & left, const vector<int> & right)
              {
                  return left[0]<right[0];
