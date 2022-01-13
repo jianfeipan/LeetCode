@@ -26,7 +26,7 @@ class MyVector {
    //Implement a vector in C++ 
 public:
    MyVector(): _size(0), _capacity(0), _data(nullptr){};
-
+   ~MyVector(){delete [] _data;}
    void push_back(const T & t)
    {
       ++_size;
