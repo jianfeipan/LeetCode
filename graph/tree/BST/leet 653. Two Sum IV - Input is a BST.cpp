@@ -11,12 +11,19 @@
  */
 class Solution {
     
+public:
     
     /*
     idea2:
     inOrder travaersal to put them in a sorted vector, then use two pointer O(N)
     */
-public:
+    bool findTarget_vector_two_pointer(TreeNode* root, int k) {
+        vector<int> nums;
+        inorder(root, nums);
+        return findTargetInSortedArray(nums, k);
+    }
+
+    
     /*
     idea1:
     recusive for every node, we seache the other point, no duplication in a BST
@@ -57,6 +64,30 @@ private:
         }
         else
             return nullptr;
+    }
+    
+    void inorder(TreeNode* node, vector<int>& nums) {
+        if (!node) return;
+        inorder(node->left, nums);
+        nums.push_back(node->val);
+        inorder(node->right, nums);
+    }
+
+    bool findTargetInSortedArray(vector<int> a, int target) {
+        for (int i = 0, j = a.size() - 1; i < j;) {
+            int sum = a[i] + a[j];
+            if (sum == target) {
+                return true;
+            }
+            else if (sum < target) {
+                i++;
+            }
+            else {
+                j--;
+            }
+        }
+
+        return false;
     }
 
 };
