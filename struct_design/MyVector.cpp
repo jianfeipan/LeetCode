@@ -44,7 +44,7 @@ public:
             {
                copy[index] = _data[index];
             }
-            delete _data;
+            delete [] _data;
             _data = copy;
             _capacity = _capacity * 2;
          }
