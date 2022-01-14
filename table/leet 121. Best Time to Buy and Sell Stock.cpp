@@ -1,44 +1,32 @@
 class Solution {
+  
   /*
-  Given an arry of unsigned int as stock prices, you will buy at a moment then sell it, compute the most big profit , if cannot make profit, it should return 0
-  ex:
-  Input: temperatures = [2,3,1,4,2,3,6] Output: 5 (6-1) 
+  You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+
+ 
+
+Example 1:
+
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
+  
+  
   */
 public:
-    //O(N^2)
-    int bestProfit_solution1(const vector<int> prices) {
-        int bestProfit = 0;
-        for(int i = 0; i < prices.size(); ++i)
+    int maxProfit(vector<int>& prices) {
+        int minPrice = INT_MAX;
+        int maxProf = 0;
+        for(const auto & price : prices)
         {
-            for(int j = i+1; j < prices.size(); ++j)
-            {
-                int profit = prices[j] - prices[i];
-                if(bestProfit<profit)
-                {
-                    bestProfit = profit;
-                }
-            }
+            minPrice = min(price, minPrice);
+            maxProf = max(price - minPrice, maxProf);
         }
+        return maxProf;
     }
-    
-    int bestProfit(const vector<int> prices) {
-        int bestProfit = 0;
-        int minPrice = prices[0];
-        for(int i = 1; i < prices.size(); ++i)
-        {
-            if(prices[i]< minPrice)
-            {
-                minPrice = prices[i];
-            }
-            int profit = prices[i] - minPrice;
-            if(profit > bestProfit)
-            {
-                bestProfit = profit;
-            }
-        }
-        
-        return bestProfit;
-    }
-    
-    
 };
