@@ -1,22 +1,32 @@
 class Solution {
-  /*
-  Given an integer array nums of unique elements, return all possible subsets (the power set).
-
-The solution set must not contain duplicate subsets. Return the solution in any order.
-
- 
-
-Example 1:
-
-Input: nums = [1,2,3]
-Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
-Example 2:
-
-Input: nums = [0]
-Output: [[],[0]]
-  */
 public:
     vector<vector<int>> subsets(vector<int>& nums)
+    {
+        return subsets_iterator(nums);
+    }
+    
+    vector<vector<int>> subsets_iterator(const vector<int>& nums)
+    {
+        vector<vector<int>> subSets; subSets.reserve(pow(2, subSets.size()));
+        subSets.push_back({});
+        
+        for(int num : nums)
+        {
+            const size_t currentSize = subSets.size();//Care ful, this could not be inlined because the size chnaged with adding
+            for(size_t i = 0; i<currentSize; ++i)
+            {
+                vector<int> toCombine(subSets[i]);
+                toCombine.emplace_back(num);
+                subSets.emplace_back(toCombine);
+            }
+        }
+        
+        return subSets;
+        
+    }
+
+    
+    vector<vector<int>> subsets_recusive(vector<int>& nums)
     {
         auto result = subsets_recusive(nums, 0);
         result.push_back({});//empty cannot be manged by the recusive: because a empty combies a {1} is still {1}, this will make duplications
@@ -37,17 +47,10 @@ public:
             results.push_back(right);
             right.insert(right.begin(), left);
             results.push_back(right);
-
         }
-      
-        
-        
         return results;
-
     }
 
-    
-    
     
     vector<vector<int>> subsets_combine_add_element(vector<int>& nums) {
         
