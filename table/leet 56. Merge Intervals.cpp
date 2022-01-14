@@ -1,80 +1,60 @@
 class Solution {
+    
+    /*
+    Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+ 
+
+Example 1:
+
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+Example 2:
+
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+ 
+
+Constraints:
+
+1 <= intervals.length <= 104
+intervals[i].length == 2
+0 <= starti <= endi <= 104
+
+
+    */
 public:
     vector<vector<int>> merge(vector<vector<int>>& intervals) 
     {
-        vector<vector<int>> merged;
-        //sort intervals then merge one by one
+        //idea: sort, then use two pointer to merge
+        if(intervals.size()<=1) return intervals;//throw an exception
         
-        // sort(intervals.begin(), intervals.end());
-        sort(intervals.begin(), intervals.end(),[](const vector<int> & left, const vector<int> & right)
-             {
-                 return left[0]<right[0];
-             });
+        sort(intervals.begin(), intervals.end());
+        
+        vector<vector<int>> merged;
         
         vector<int> currentInterval = intervals[0];
         
-        for(int i = 1; i<intervals.size(); ++i)
+        for(size_t i = 1; i<intervals.size(); ++i)
         {
-            if(intervals[i][0]<= currentInterval[1])
-            {
-                currentInterval[1] = max(intervals[i][1], currentInterval[1]);
-            }
-            else
+            //()[], ([)], or([]) ---> dont'' foret that you did the sort
+            if(currentInterval[1] < intervals[i][0])
             {
                 merged.push_back(currentInterval);
                 currentInterval = intervals[i];
             }
+            else
+            {
+                currentInterval[1] = max(currentInterval[1], intervals[i][1]);
+            }
         }
+        
         merged.push_back(currentInterval);
         
         return merged;
-    }
-    
-    
-    vector<vector<int>> merge_with_tree_map_sort(vector<vector<int>>& intervals) 
-    {
-        vector<vector<int>> merged;
-        
-        map<int, int> openCloses;
-        for(const auto & interval : intervals)
-        {
-            ++openCloses[interval[0]];                    
-            --openCloses[interval[1]];        
-        }
-        
-        stack<int> opens;
-        for(auto openClose : openCloses)
-        {
-            if(openClose.second > 0)
-            {
-                while(openClose.second>0)
-                {
-                    --openClose.second;
-                    opens.push(openClose.first);//cout<<"push : "<<openClose.first<<endl;
-                }
-            }
-            else if(openClose.second < 0)
-            {
-                while(openClose.second<0)
-                {
-                    if(opens.size() == 1)
-                    {
-                        int start = opens.top();
-                        int end = openClose.first;
-                        merged.push_back({start, end});//cout<<"insert : "<<start<<"-"<<end<<endl;
-                    }
-                    ++openClose.second;
-                    opens.pop();//cout<<"pop : "<<openClose.first<<endl;
-                }
-                
-            }
-            else
-            {
-                if(opens.empty())
-                    merged.push_back({openClose.first, openClose.first});
-            }
-            
-        }
-        return merged;
+
+       
     }
 };
