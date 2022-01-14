@@ -33,37 +33,26 @@ class Solution {
 public:
     int eraseOverlapIntervals(vector<vector<int>>& intervals) 
     {
+        if(intervals.empty()) return -1; // throw an exception
+        
         int toBeDeleted = 0;
         sort(intervals.begin(), intervals.end());
         
-        auto it = intervals.begin();
-        int currentStart = it->at(0);
-        int currentEnd = it->at(1);
-        ++it;
-        for(; it!=intervals.end();++it)
+
+        vector<int> currnetInterval = intervals[0];
+        
+        for(size_t i = 1; i < intervals.size(); ++i)
         {
-            
-            cout<< currentStart <<", "<< currentEnd << " vs "<<it->at(0)<< ", "<<it->at(1)<<endl;
             //check overlapping
-            if(currentEnd > it->at(0))
+            if(currnetInterval[1] >intervals[i][0])
             {
                 toBeDeleted++;
-                if(currentEnd < it->at(1))//the secons one could have bigger possibility to have overlapping the next intervals
-                {
-                    //remove the second one
-                }
-                else
-                {
-                    //remove the first one
-                    currentStart = it->at(0);
-                    currentEnd = it->at(1);
-                }
+                if(currnetInterval[1] >= intervals[i][1])
+                    currnetInterval = intervals[i];//remove the first one
+                //remove the first one: currnetInterval stays
             }
             else
-            {
-                currentStart = it->at(0);
-                currentEnd = it->at(1);
-            }
+                currnetInterval = intervals[i];
         }
         return toBeDeleted;
     }
