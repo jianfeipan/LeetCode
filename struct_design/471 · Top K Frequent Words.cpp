@@ -1,46 +1,31 @@
 class Solution {
 public:
-    /**
-     * @param words: an array of string
-     * @param k: An integer
-     * @return: an array of string
-     */
-    vector<string> topKFrequentWords(vector<string> &words, int k) {
-        //heap : priority_queue
-
-        unordered_map<string, size_t> counts;
-        for(const auto & word : words)
-        {
-            ++counts[word];
-        }
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        /*
+        1 we need to count -> hashMap count
+        2 to get top k ->maxHeap
+        */
         
-        auto countLess = [](const pair<string, size_t> & left, const pair<string, size_t> & right)
-        {
-            if(left.second==right.second)
-                return left.first>right.first;
-            return left.second<right.second;
+        unordered_map<string, int> wordsCount;
+        for(const auto & word:words) ++wordsCount[word];
+        
+        auto less = [](const pair<int, string> & left, const pair<int, string> & right){
+            if(left.first == right.first) return left.second > right.second;
+            else return left.first < right.first;
         };
         
-        priority_queue<pair<string,size_t>,
-            vector<pair<string, size_t>>,
-            decltype(countLess)> maxHeap(countLess);//bydefault maxheap : with less = true cmp
-
-        for(const auto & wordCount : counts)
+        priority_queue<
+            pair<int, string>,
+            vector<pair<int, string>>, 
+            decltype(less) > maxHeap(less);//!!pay attention!!
+        for(const auto & [word, count] : wordsCount) maxHeap.push({count, word});
+        
+        vector<string> topK;
+        while(k-- && !maxHeap.empty())
         {
-            cout<<wordCount.first<<wordCount.second<<endl;
-            maxHeap.push(wordCount);
+            topK.push_back(maxHeap.top().second);maxHeap.pop();
         }
-
-        cout<<maxHeap.empty()<<endl;
-
-        vector<string> topK; topK.reserve(k);
-        for(int i = 0; i<k && !maxHeap.empty(); ++i)
-        {
-            cout<<maxHeap.top().first<<maxHeap.top().second<<endl;
-
-            topK.push_back(maxHeap.top().first);
-            maxHeap.pop();
-        }
+        
         return topK;
     }
 };
