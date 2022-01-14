@@ -1,27 +1,18 @@
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        //Idea1 : sort all strings, use a map <sorted string, set<originalStrings>> to group
-        
-        vector<string> sortedStrs(strs);
-        for_each(sortedStrs.begin(), sortedStrs.end(), [](string& str){
-            sort(str.begin(), str.end());
-        });
-        
-        map<string, vector<string>> groupStrs;
-        for(size_t i = 0; i < sortedStrs.size(); ++i)
+        unordered_map<string, vector<string>> grouped;
+        for(const auto & str : strs)
         {
-            groupStrs[sortedStrs[i]].push_back(strs[i]);
+            string key(str);sort(key.begin(), key.end());
+            grouped[key].push_back(str);
         }
         
-        vector<vector<string>> result;
-        result.reserve(groupStrs.size());
-        
-        for(const auto & strPair : groupStrs)
+        vector<vector<string>> result;result.reserve(grouped.size());
+        for(const auto &[key, strs] :  grouped)
         {
-            result.push_back(strPair.second);
+            result.emplace_back(vector<string>{strs.begin(), strs.end()});
         }
-                             
         return result;
     }
 };
