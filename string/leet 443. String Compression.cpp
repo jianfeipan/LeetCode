@@ -16,15 +16,9 @@ public:
             int number = current-start;
             if(number>1)
             {
-                stack<char> intToChar;
-                while(number>0) 
-                {
-                    intToChar.push('0' + number%10);
-                    number/=10;
-                }
-                while(!intToChar.empty())
-                {
-                    chars[compressed++] = intToChar.top();intToChar.pop();
+                string numStr = to_string(number);
+                for (char ch : cnt){
+                    chars[compressed++] = ch;
                 }
             }            
         }
