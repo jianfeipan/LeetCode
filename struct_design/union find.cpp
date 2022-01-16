@@ -6,13 +6,21 @@ public:
   }
   
   int findRoot(int x) {
-     int r, y = x, t;
-     while(root[x] != x) x = root[x];
-     r = x;
-     while(root[y] != y) {
-        t = root[y]; root[y] = r; y = t; 
+     int finalRoot;
+     int toSearch = x;
+     while(root[toSearch] != toSearch) toSearch = root[toSearch];
+     finalRoot = saerch;
+    
+     //should update the roots to finalRoot--> most famous
+     int currentRoot;
+     int toUpdate = x;
+     while(root[toUpdate] != toUpdate) {
+        currentRoot = root[toUpdate]; 
+        root[toUpdate] = finalRoot;
+        toUpdate = currentRoot; 
      }
-     return r; 
+    
+     return finalRoot; 
   }
 
   void merge(int x, int y) {
