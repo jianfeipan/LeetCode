@@ -52,48 +52,42 @@ idea :
     */
 public:
     vector<int> findAnagrams(string s, string p) {
-        return findAnagrams_sliding_window_with_map(s, p);
-    }
-private:
-    vector<int> findAnagrams_sliding_window_with_map(const string & s, const string & p) 
-    {
-        if(s.empty() || p.empty() || s.size() < p.size()) return {};//throw exception
         
-        vector<int> anagramSubstrs;
+        vector<int> anagrams;
         
-        unordered_map<char, int> charDiagram;
-        for(char c : p) ++charDiagram[c];
+        unordered_map<char, int> dict;
+        for(auto c : p) ++dict[c];
         
-        size_t to = 0, from = 0;
-        int counter = charDiagram.size();//number of unique letters need to be matched
-        
-        while(from<s.size() && to<s.size())
+        int charsToMatch = dict.size();
+        size_t left = 0;
+        size_t right = 0;
+        while(right<s.size())
         {
-            while(counter>0 && to<s.size())//find the first "to" that in [from , to]  we have all the  letters
+            while(right<s.size() && charsToMatch>0)
             {
-                if(charDiagram.count(s[to]))
+                if(dict.count(s[right]))
                 {
-                    --charDiagram[s[to]];
-                    if(charDiagram[s[to]]==0) --counter;
+                    --dict[s[right]];
+                    
+                    if(dict[s[right]] == 0)   --charsToMatch;
                 }
-                ++to;
+                ++right;
             }
             
-            while(counter==0 && from<s.size())
+            while(left<s.size() && charsToMatch == 0)
             {
-                if(to - from  == p.size())//I have exactly p.size() word and all the words are in this range :find anagram
-                    //attention here the to is after a ++ so it's [from, to-1]
-                    anagramSubstrs.push_back(from);
-                
-                if(charDiagram.count(s[from]))
+                if(right-left == p.size()) anagrams.push_back(left);
+
+                if(dict.count(s[left]))
                 {
-                    if(charDiagram[s[from]]==0) ++counter;
-                    ++charDiagram[s[from]];
+                    ++dict[s[left]];
+                    
+                    if(dict[s[left]] == 1)   ++charsToMatch;
                 }
-                ++from;
+                ++left;
             }
+                        
         }
-        return anagramSubstrs;
+        return anagrams;
     }
-    
 };
