@@ -18,7 +18,7 @@ Output: 0
 */
 public:
     int strStr(string haystack, string needle) {
-        return strStr_KMP_one_loop(haystack, needle);
+        return strStr_KMP(haystack, needle);
     }
 
     
@@ -31,6 +31,33 @@ public:
             while(j<needle.size() && needle[j] == haystack[i+j]) ++j;
             
             if(j == needle.size()) return i;
+        }
+        return -1;
+    }
+    
+    int strStr_KMP(string haystack, string needle) 
+    {
+        int m = haystack.size(), n = needle.size();
+        if (!n) {
+            return 0;
+        }
+        vector<int> lps = kmpProcess(needle);
+        
+        for(int j = 0,i = 0; i<=m - n;)
+        {
+            while(j<needle.size() && needle[j] == haystack[i+j]) ++j;
+            
+            if(j == needle.size()) return i;
+            
+            if (i < m && haystack[i+j] != needle[j])
+            {
+                if(j==0) ++i;
+                else
+                {
+                    i += (j -lps[j - 1]);
+                    j = lps[j - 1];
+                }
+            }
         }
         return -1;
     }
@@ -50,7 +77,6 @@ public:
                 return i - j;
             }
             if (i < m && haystack[i] != needle[j]) j ? j = lps[j - 1] : i++;
-            }
         }
         return -1;
     }
