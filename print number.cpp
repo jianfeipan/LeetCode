@@ -24,8 +24,50 @@ using namespace std;
   
 // 1000000 -> 10,00,000
 // 00010100
+
+/*
+
+follow up :
+//Indian 1000000 -> 10,00,000
+//US 1000000 -> 1,000,000
+
+how to support different formate
+*/
+
+class Formate
+{
+public:
+    virtual bool shouldAddCommaAt(size_t num) = 0;
+};
+
+class USFormate : public Formate
+{
+public:
+    bool shouldAddCommaAt(size_t num) override
+    {
+        return num%3 == 0;
+    }    
+};
+
+class IndianFormate : public Formate
+{
+public:   
+    bool shouldAddCommaAt(size_t num) override
+    {
+        if(num <=3)
+        {
+           
+            return num%3 == 0;
+        }
+        else
+        {
+            return (num+3)%2 == 0;
+        }
+    } 
+};
+
   
-string formatNum(int num) 
+string formatNum(int num, Formate & formate) 
 {
   if(num == 0 ) return "0";
   
@@ -36,7 +78,7 @@ string formatNum(int num)
   while(num)
   {
       numStr+=(sign*num%10)+'0';num/=10;
-      if(++count %3 == 0 && num) numStr+=',';
+      if(formate.shouldAddCommaAt(++count) && num) numStr+=',';
   }
   
   if(sign<0) numStr+='-';
@@ -50,9 +92,11 @@ int main()
 {
     string res;
     int _num;
+    //USFormate formate;
+    IndianFormate formate;
     while(cin >> _num)
     {
-        res = formatNum(_num);
+        res = formatNum(_num, formate);
         cout << res<<endl;
     } 
     return 0;
