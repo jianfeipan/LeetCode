@@ -64,9 +64,26 @@ vector<int> stockSpans_monoton_stack(const vector<int>& prices) //O(N)  S: O(N)
     return spans;
 }
 
+vector<int> stockSpans_monoton_stack2(const vector<int>& prices) //O(N)  S: O(N)
+{
+    /*
+   same idea of monoton stack, but here we don't use the number from spans, we can get the number directly from the index!!!!
+    */
+    vector<int> spans;spans.reserve(prices.size());   
+    stack<size_t> left;
+    
+    for(size_t i = 0; i<prices.size(); ++i)
+    {
+        while(!left.empty() && prices[left.top()]< prices[i]) left.pop();
+        spans.push_back(left.empty() ? i + 1 : i - left.top());//----> i - left is alreay the number of days
+        left.push(i);
+    }
+    return spans;
+}
+
 vector<int> stockSpans(const vector<int>& prices) 
 {
-    return stockSpans_monoton_stack(prices);
+    return stockSpans_monoton_stack2(prices);
 }
 
 
