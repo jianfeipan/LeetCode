@@ -72,27 +72,31 @@ public:
 
         //last two neighbers
         auto * parent = current.parent;
-        string trackBackStr(name);
-        for(int i = trackBackStr[trackBackStr.size() -1 ] - 'a'; i>=0; --i)
+        string trackBackStr = name.substr(0, name.size() - 1);
+        char currentletter = trackBackStr[trackBackStr.size() -1 ];
+        
+        for(int i = currentletter - 'a'-1; i>=0; --i)
         {
             if(parent->next[i])
-                dfsVisit(*parent->next[i], trackBackStr, neighbers, 2);
+                dfsVisit(*parent->next[i], trackBackStr.substr(0, trackBackStr.size() - 1), neighbers, 2);
         }
         
         
-        while(neighbers.size()<4 && parent)
+        while(neighbers.size()<2 && parent)
         {
+            currentletter = trackBackStr[trackBackStr.size() -1 ];
             for(int i = 25; i>=0 && neighbers.size()<4; --i)
             {
-                if(parent->next[i])
+                if(i != currentletter-'a' && parent->next[i])
                     dfsVisit(*parent->next[i], trackBackStr, neighbers, 2);
             }
             parent = parent->parent;
             trackBackStr = trackBackStr.substr(0, trackBackStr.size() - 1);
+
         }
         
         //nextTwoNeighbers
-        dfsVisit(current, name, neighbers, 2);
+        dfsVisit(current, name, neighbers, 4);
         
         return neighbers;
     }
@@ -167,7 +171,7 @@ int main(int argc, char *argv[])
     for(const auto & name : autoComplete) cout<<name<<", ";
     cout<<endl;
     
-    const auto & neighbors = book.geNeighborsByName("ab");
+    const auto & neighbors = book.geNeighborsByName("abc");
     for(const auto & name : neighbors) cout<<name<<", ";
     cout<<endl;
     
