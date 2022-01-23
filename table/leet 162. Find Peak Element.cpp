@@ -10,13 +10,13 @@ private:
             return low;
         else
         {
-            int mid1 = (low+high)/2;
-            int mid2 = mid1+1;
-            if(num[mid1] > num[mid2])
+            int mid = (low+high)/2;
+
+            if(num[mid] < num[mid+1])
             // pick is that you are looking for a direction, going up or going down, from middle you know go to which direction, then you focus on the go up direction part, because the -1 and  infini will be INT_MIN, sure it's a down.
-                return binarySearch(num, low, mid1);
+                return binarySearch(num, mid+1, high);
             else
-                return binarySearch(num, mid2, high);
+                return binarySearch(num, low, mid);
         }
     }
 };
