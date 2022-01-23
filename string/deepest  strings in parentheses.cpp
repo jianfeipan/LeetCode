@@ -82,7 +82,7 @@ vector<string> deepestString(const string & setence)
 
 int main(int argc, char *argv[])
 {
-    const auto & deepest = deepestString("(1(2{{3}})){{{{4}}}}");
+    const auto & deepest = deepestString("(1asd(2asd{{3asd}asd}asd)){{{{4asd}}}}");
 
     for(const auto & word : deepest) cout<<word<<", ";
     cout<<endl;
