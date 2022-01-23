@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <vector>
 #include <stack>
+#include <map>
 
 using namespace std;
 
@@ -17,9 +18,9 @@ using namespace std;
 其中每个元素为范围内数的个数。上面例子输出[2,3]，其中有两个数（2、4）在范围[2, 5]内，有三个数（6、7、8）在范围[5, 10]内。
 */
 
-vector<size_t> intervalCount(const vector<int> & nums, const vector<int> & intervals)
+vector<size_t> intervalCount_sorted(const vector<int> & nums, const vector<int> & intervals)
 {
-    vector<size_t> counts;
+    vector<size_t> counts;counts.reserve(intervals.size());
     
     size_t currentCount=0;
     size_t dataIndex = 0;
@@ -45,6 +46,49 @@ vector<size_t> intervalCount(const vector<int> & nums, const vector<int> & inter
     
     
     return vector<size_t>(counts.begin()+1, counts.end());
+}
+
+vector<size_t> intervalCount_map(const vector<int> & nums, const vector<int> & intervals)
+{
+    vector<size_t> counts;
+    
+    map<int, size_t> startCounts;
+    
+    for(auto start : intervals) startCounts[start] = 0;
+    
+    for(auto num : nums)
+    {
+        auto it = startCounts.lower_bound(num);
+        if(it!=startCounts.end())
+        {
+            if(num == it->first)
+            {
+                ++it->second;
+            }
+            else //num<it->first
+            {
+                if(it != startCounts.begin())
+                {
+                    --it;
+                    ++it->second;
+                }
+            }
+        }
+    }
+    
+    
+    for(const auto & [start, count] : startCounts)
+    {
+        counts.push_back(count);
+    }
+    
+    return vector<size_t>(counts.begin(), counts.end()-1);
+}
+
+
+vector<size_t> intervalCount(const vector<int> & nums, const vector<int> & intervals)
+{
+    return intervalCount_map(nums, intervals);
 }
 
 
