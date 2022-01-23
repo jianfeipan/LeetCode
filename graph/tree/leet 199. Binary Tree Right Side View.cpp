@@ -20,25 +20,16 @@ public:
         q.push(root);
         while(!q.empty())
         {
-            size_t currentLevelSize = q.size();
-            auto * currentLevelMostRight = q.front();
-            result.push_back(currentLevelMostRight->val);
+            result.push_back(q.front()->val);
             
+            const size_t currentLevelSize = q.size();
             for(size_t i = 0; i < currentLevelSize; ++i)
             {
-                auto * node = q.front();
-                if(node)
-                {
-                    if(node->right) q.push(node->right);
-                    if(node->left) q.push(node->left);
-                }
-                
-                q.pop();
+                auto * node = q.front();q.pop();
+                if(node->right) q.push(node->right);//right first , because we want to get the front 
+                if(node->left) q.push(node->left);
             }
         }
-        
         return result;
-        
-        
     }
 };
