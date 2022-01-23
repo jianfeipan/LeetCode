@@ -33,6 +33,9 @@ public:
             for(int day = 2; day<prices.size()+1; ++day)
             {
                 maxDiff = max(maxDiff, maxProfits[tradeNb-1][day-2] - prices[day-2]);//---------> replace the for loop of all buy days
+                //maxDiff      = maxProfit0 - price1
+             
+                //betterProfit = maxDiff +  price2 = maxProfit0 - price1 + price2 --> maxPrice one price1 now on price 2 
                 const int maxIfSellThisDay = maxDiff + prices[day-1];
 
                 const int ifNotTradeThisDay = maxProfits[tradeNb][day-1];
