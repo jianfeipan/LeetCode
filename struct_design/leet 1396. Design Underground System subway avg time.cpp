@@ -16,6 +16,7 @@ public:
         auto & sumAndCount  =  _sumAndCount[_checkIn[id].first][stationName];
         sumAndCount.first+=rideTime;
         ++sumAndCount.second;
+        _checkIn.erase(id);
     }
     
     double getAverageTime(string startStation, string endStation) //const
@@ -33,7 +34,7 @@ private:
     using RideMetric = pair<TotalTime, RideCount>;
     using Destimations = unordered_map<string, RideMetric>;
     
-    unordered_map<  string, Destimations> _sumAndCount;
+    unordered_map<string, Destimations> _sumAndCount;
     unordered_map<int, pair<string, int>> _checkIn;
 };
 
