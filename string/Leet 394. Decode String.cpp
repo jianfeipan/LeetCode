@@ -10,9 +10,7 @@ public:
 public:
     string decode(const string & s, int & i)//this is passed as reference is very trick : we want to continue on the string in recusive calls
     {
-        
         string decoded;
-        
         
         while(i<s.size() && s[i]!=']')
         /* 
@@ -39,7 +37,8 @@ public:
             //read string       
             else if(std::isalpha(s[i]))       
             {
-                decoded+=readChars(s,i);//we cannot do a return directly here because we may have 2[a3[b]], in this case, after read a, we should go to the while instead of return to uper level.
+                decoded+=readChars(s,i);
+                //we cannot do a return directly here because we may have 2[a3[b]], in this case, after read a, we should go to the while instead of return to uper level.
             }
         }
         return decoded;
@@ -50,30 +49,16 @@ public:
 private:
     int readNum(const string &s, int & i)
     {
-        
         int count = 0;
-        for(; i<s.size(); ++i)
-        {
-            if(std::isdigit(s[i]))
-            {
-                count*=10;count+=(s[i] - '0');
-            }
-            else break;
-        }
+        while(i<s.size() && std::isdigit(s[i])) count*=10,count+=(s[i] - '0'),++i;
+        
         return count;
     }    
     
     string readChars(const string & s, int & i)
     {
         string chars;
-        for(; i<s.size(); ++i)
-        {
-            if(std::isalpha(s[i]))
-            {
-                chars+=s[i];
-            }
-            else break;
-        }
+        while(i<s.size() && std::isalpha(s[i])) chars+=s[i],++i;
 
         return chars;
     }
