@@ -1,39 +1,45 @@
 class RandomizedSet {
 public:
-    /** Initialize your data structure here. */
-    RandomizedSet() {
-        
-    }
+    RandomizedSet() {}
     
-    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
-    bool insert(int val) {
-        if (m.find(val) != m.end()) return false;
-        nums.emplace_back(val);
-        m[val] = nums.size() - 1;
+    bool insert(int val)
+    {
+        if(_valToIndex.count(val) != 0) return false;
+        
+        _valToIndex[val] = _values.size();
+        _values.push_back(val);
         return true;
     }
     
-    /** Removes a value from the set. Returns true if the set contained the specified element. */
-    bool remove(int val) {
-        if (m.find(val) == m.end()) return false;
+    bool remove(int val)
+    {
+        if(_valToIndex.count(val) == 0) return false;
         
-        const int indexToRemove = m[val];
+        const int indexToRemove = _valToIndex[val];
+       
+        _values[indexToRemove] = _values.back();//use swap back then pop back to remove : we don't need an order, just random access
+        _values.pop_back();
         
-        int last = nums.back();//swap last value to the val's position then remove the last one in vector o(1)
-        nums[indexToRemove] = last;
-        m[last] = indexToRemove;
-        nums.pop_back();
+        _valToIndex[ _values[indexToRemove]] = indexToRemove;
         
-        m.erase(val);
-        
+        _valToIndex.erase(val);
         return true;
     }
     
-    /** Get a random element from the set. a ring with pointer ++ is not random : current value is 0 pobability */
-    int getRandom() {
-        return nums[rand() % nums.size()];
+    int getRandom() 
+    {
+        return _values[random()%_values.size()];
     }
+    
 private:
-    vector<int> nums;// random access : random modulo with vector!!!
-    unordered_map<int, int> m;// unique element with access o(1) ---> map/set
+    unordered_map<int , size_t> _valToIndex;
+    vector<int> _values;
 };
+
+/**
+ * Your RandomizedSet object will be instantiated and called as such:
+ * RandomizedSet* obj = new RandomizedSet();
+ * bool param_1 = obj->insert(val);
+ * bool param_2 = obj->remove(val);
+ * int param_3 = obj->getRandom();
+ */
