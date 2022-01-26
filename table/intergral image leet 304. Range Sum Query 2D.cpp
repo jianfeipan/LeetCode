@@ -2,30 +2,16 @@ class NumMatrix {
 public:
     NumMatrix(vector<vector<int>>& matrix):_intergralImage(matrix) 
     {
-        
-        size_t linCount = matrix.size();
-        size_t colCount = matrix[0].size();
+        const size_t linCount = matrix.size();
+        const size_t colCount = matrix[0].size();
         
         for(size_t lin = 0; lin<linCount; ++lin)
-        {
-            int currentSum = 0;
-            for(size_t col = 0; col<colCount; ++col)
-            {
-                currentSum+=_intergralImage[lin][col];
-                _intergralImage[lin][col] = currentSum;
-            }
-        }
+            for(size_t col = 1; col<colCount; ++col)
+                _intergralImage[lin][col]+=_intergralImage[lin][col-1];
         
         for(size_t col = 0; col<colCount; ++col)
-        {
-            int currentSum = 0;
-            for(size_t lin = 0; lin<linCount; ++lin)
-            {
-                currentSum+=_intergralImage[lin][col];
-                _intergralImage[lin][col] = currentSum;
-            }
-        }
-        
+            for(size_t lin = 1; lin<linCount; ++lin)
+                _intergralImage[lin][col]+=_intergralImage[lin-1][col];
     }
     
     int sumRegion(int row1, int col1, int row2, int col2) 
