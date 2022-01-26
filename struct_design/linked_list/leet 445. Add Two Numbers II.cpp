@@ -8,8 +8,6 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-class Solution {
-
 /*
 You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
 
@@ -29,77 +27,77 @@ Output: [0]
 
 
 */
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) 
-    {
-        ListNode* totalSum = new ListNode();
-     
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //I need same length
         size_t len1 = count(l1);
         size_t len2 = count(l2);
         
-        int diff = 0;
+        ListNode * filledL1 = l1;
+        ListNode * filledL2 = l2;
+
+        if(len1>len2) 
+            filledL2 = fillWithZero(l2, len1 - len2);
+        else if(len1 < len2)
+            filledL1 = fillWithZero(l1, len2 - len1);
         
-        ListNode* shortNum = l1;
-        ListNode* longerNum = l2;
+        return addSameLengthList(filledL1, filledL2);
         
-        if(len1 > len2)
+    }
+    
+private:
+    size_t count(ListNode * node)
+    {
+        size_t counter = 0;
+        while(node)
         {
-            longerNum = l1;
-            shortNum = l2;
-            diff = len1 - len2;
-        }
-        else
-        {
-            diff = len2 - len1;
+            node=node->next;
+            ++counter;
         }
         
-        //rather than move the pointer to long list, easy way is to add 0s in front of short list
-        
-        ListNode* filledShort = fillZeroOnLeft(shortNum, diff);
+        return counter;
+    }
+    
+    ListNode*  fillWithZero(ListNode* node, size_t count)
+    {
+        if(count==0) return node;
+        return new ListNode(0, fillWithZero(node, count-1));//FIXME: memery leaking risk, this dilled nodes should be deleted
+    }
+    
+    ListNode* addSameLengthList(ListNode* l1, ListNode* l2)
+    {
         
         int carry = 0;
-        auto * rightSum = addTwoNumbersWithSameLen(filledShort, longerNum, carry);
-        auto current = totalSum;
-        if(carry)
-        { 
-            current->next = new ListNode(carry);
-            current = current->next;
-        }
-        
-        
-        current->next = rightSum;
-            
-        return totalSum->next;
+        auto sum = addSameLengthList(l1, l2, carry);
+                
+        return carry == 0 ? sum : new ListNode(carry, sum);//FIXME: to be deleted by caller
     }
-private:
-    ListNode* addTwoNumbersWithSameLen(ListNode* l1, ListNode* l2, int & carry) 
+    
+    ListNode* addSameLengthList(ListNode* l1, ListNode* l2, int & carry)
     {
         if(!l1 && !l2) return nullptr;
         
-        int carryFromRight = 0;
-        auto rightSum = addTwoNumbersWithSameLen(l1->next, l2->next, carryFromRight);
+        if(!l1 || !l2) throw invalid_argument("Input lists should have same length");
         
-        const int sum = l1->val + l2->val + carryFromRight;
+        int rightCarry = 0;
+        auto rightNode =  addSameLengthList(l1->next, l2->next, rightCarry);
+        
+        const int sum = rightCarry + l1->val + l2->val;
         
         carry = sum/10;
-        return new ListNode(sum%10, rightSum);
-    }
-    
-    size_t count(ListNode* node)
-    {
-        size_t size= 0;
-        while(node)
-        {
-            size++;
-            node = node->next;
-        }
-        return size;
-    }
-    
-    ListNode * fillZeroOnLeft(ListNode* shortNum, int n)
-    {
-        if(n==0) return shortNum;
-        return new ListNode(0, fillZeroOnLeft(shortNum, n-1));
+        return new ListNode(sum%10, rightNode);//FIXME: to be deleted by caller
     }
 
+    
 };
