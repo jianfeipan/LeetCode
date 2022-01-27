@@ -59,7 +59,7 @@ void visit(string airport, map<string, multiset<string>> & outComes, vector<stri
 
 vector<string> findItinerary(vector<vector<string>>& tickets)
 {
-   map<string, multiset<string>> outComes;
+   map<string, multiset<string>> outComes;//MUTI-set : we could have same ticket twice for a loop :)
    vector<string> route;
    for (const auto & ticket : tickets)
       outComes[ticket[0]].insert(ticket[1]);
