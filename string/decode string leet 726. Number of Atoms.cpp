@@ -30,7 +30,7 @@ private:
             else if(c==')')
             {
                 ++i;
-                const int count = max(readNum(formula, i), 1);
+                const int count = readNum(formula, i);
                 if(count>0)
                     for(int j = 0; j<count;++j) decoded+=currentExpression;
                 else
@@ -73,15 +73,9 @@ private:
                         counts[currentAtom] +=1;
                         currentAtom.clear();
                     }
-                    currentAtom+=c;
-                    ++i;
-
                 }
-                else if(islower(c))
-                {
-                    currentAtom+=c;
-                    i++;
-                }
+                currentAtom+=c;
+                ++i;
             }
         }
         counts[currentAtom] +=1;
