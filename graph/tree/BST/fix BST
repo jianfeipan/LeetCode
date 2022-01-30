@@ -1,0 +1,73 @@
+#include <iostream>
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+#include <optional>
+#include <list>
+#include <set>
+#include <map>
+#include <array>
+#include <functional>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+/*
+
+we have a BST
+one pair of nodes in that BST are swaped, 
+how to fix it ? 
+*/
+
+struct Node
+{
+    int val;
+    Node * left;
+    Node * right;
+};
+
+Node* firstDecrise = nullptr;
+Node* secondDecrise = nullptr;
+
+Node* prevNode = nullptr;
+
+void findDecriseNode(Node * root)
+{
+    if(!root) return;
+    
+    findDecriseNode(root->left);//inorder traversal
+    
+    if(prevNode)
+    {
+        if(prevNode->val > root->val)//decrising
+        {
+            if(firstDecrise==nullptr)
+                firstDecrise = prevNode;
+            secondDecrise = root;
+        }
+    }
+    prevNode = root;
+    findDecriseNode(root->right);
+    
+}
+
+void fixBST(Node * root)
+{
+    findDecriseNode(root);
+    
+    if(!firstDecrise && !secondDecrise) return;//everything is good
+    
+    int temp = firstDecrise->val;
+    firstDecrise->val = secondDecrise->val;
+    secondDecrise->val = temp;
+    
+        
+}
+
+int main()
+{
+   return 0;
+}
