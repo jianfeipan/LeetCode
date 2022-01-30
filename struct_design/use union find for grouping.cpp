@@ -1,80 +1,49 @@
-#include <iostream>
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <unordered_set>
-#include <queue>
-#include <optional>
-#include <list>
-#include <set>
-#include <map>
-#include <array>
-#include <functional>
-#include <algorithm>
-
-using namespace std;
-
-/*
-Given List and a function (take 2 params, returns if 2 are of same group) - return list of lists that belong to same group.
-bool sameGroup(int a, int b) { 
-    // returns true if the elements are of same group else false.
-}
-
-*/
-
-bool sameGroup(int a, int b) 
-{
-    return a+3 == b || b+3 == a; 
-}
-
-vector<vector<int>> goupe(vector<int> nums, function<bool(int, int)>)
-{
-    
-    sort(nums.begin(), nums.end());//O(NlongN)
-    
-    //union find
-    vector<int> parents(nums);
-     
-    for(size_t i = 0; i<nums.size()-1; ++i)//O(N^2)
+class Solution {
+public:
+    int findCircleNum(vector<vector<int>>& isConnected) 
     {
-        for(size_t j = i+1; j<nums.size(); ++j)
+        _root = vector<int>(isConnected.size(), 0);
+        for(int i = 0; i<_root.size(); ++i) _root[i] = i;
+        
+        for(int from = 0; from < isConnected.size(); ++from)
         {
-            if(sameGroup(nums[i], nums[j]))
+            for(int to = from+1; to < isConnected[from].size(); ++to)
             {
-                parents[j] = min(parents[i], parents[j]);//take always smaller one as parent
+                if(isConnected[from][to])
+                    unionElements(from ,to);
             }
         }
+        
+        
+        unordered_set<int> unique;
+        for(int i = 0; i<_root.size(); ++i)
+        {
+            cout<<_root[i]<<endl;
+            unique.insert(find(i));
+        }
+        
+        return unique.size();
     }
-    unordered_map<int, vector<int>> groupsByParent;
     
-    
-
-    for(size_t i = 0; i<parents.size(); ++i)
+private:
+    int find(int num)
     {
-        groupsByParent[parents[i]].push_back(nums[i]);
+        if(_root[num] == num) return num;
+        else return _root[num] = find(_root[num]); //recusive to update!!!!!!!!!!!!!!!!!!!!!!!!!
     }
     
-    vector<vector<int>> groups;groups.reserve(groupsByParent.size());
-    
-    for(const auto & goupe : groupsByParent)
+    void unionElements(int left, int right)
     {
-        groups.push_back(goupe.second);
+        int leftRoot = find(left);
+        int rightRoot = find(right);
+        
+        if(leftRoot!=rightRoot)
+        {
+            _root[leftRoot] = rightRoot;//union the root of root !!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
     }
     
-    return groups;
-}
-
-
-int main()
-{
-    
-    const auto & groups = goupe({7,8,9,1,5,10,2,4,3,6,11},sameGroup);
-   
-   for(const auto & group : groups)
-   {
-        cout<<"[";
-        for(const auto & num:group) cout<<num<<", ";
-        cout<<"] , ";
-   }
-   cout<<endl;
-}
+private:
+    vector<int> _root;
+    vector<int> _rank;
+};
