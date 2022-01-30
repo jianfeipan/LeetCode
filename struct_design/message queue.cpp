@@ -69,3 +69,90 @@ int main(int argc, char *argv[])
     
     return 0;
 }
+
+
+
+#include <iostream>
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
+#include <optional>
+#include <list>
+#include <set>
+#include <map>
+#include <array>
+#include <functional>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+/*
+Reorder Packets
+There is a continous stream of data in the form of (1, "abcd"). Write a program to output the data from the stream in realtime in order, so 1,2,3,4,5. You cannot queue up the incoming data from the stream.
+Input: (1, "abcd"), (2, "efgh"), (4, "mnop"), (5, "qrst"), (3, "ijkl")
+So for example if the first incoming bit of data is (1, "abcd"), and the second is (4, "mnop"), you cannot output (4, "mnop") until you get 2, 3.
+
+
+*/
+
+class MassageQueue
+{
+public:    
+MassageQueue():_queue(), _waitFor(1)
+{
+    
+}
+    
+public:
+    vector<pair<int, string>> send(int order, const string & msg)
+    {
+        vector<pair<int, string>> outputs;
+        if(_waitFor == order)
+        {
+            outputs.push_back({order, msg});
+            
+            auto it = _queue.find(++_waitFor);
+            while(it!=_queue.end())
+            {
+                outputs.push_back(*it);
+                it = _queue.find(++_waitFor);
+            }
+        }
+        else
+        {
+            _queue[order] = msg;
+        }
+        return outputs;
+    }
+    
+private:
+    map<int, string> _queue;
+    int _waitFor;
+    
+
+};
+
+void sendMsg(MassageQueue & q,int order, const string & msg)
+{
+    const auto & outputs = q.send(order, msg);
+    for(const auto & output : outputs) cout<<output.first << " : "<< output.second<<" ";
+    cout<<endl;
+}
+
+int main()
+{
+    MassageQueue q;
+    sendMsg(q, 1, "aa");
+    sendMsg(q,4, "dd");
+    sendMsg(q,2, "bb");
+    sendMsg(q,3, "cc");
+    sendMsg(q,6, "ff");
+    sendMsg(q,7, "ff");
+    sendMsg(q,8, "ff");
+    sendMsg(q,5, "ff");
+
+    
+}
