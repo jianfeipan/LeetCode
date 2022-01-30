@@ -18,11 +18,9 @@ public:
 
 class Solution {
 public:
-    Node* connect(Node* root) {
-        /*
-        idea BFS, level by level, link in side level in order
-        */
-        if(!root) return nullptr;//throw new invalid_parameter();
+    Node* connect(Node* root) 
+    {
+        if(!root) return nullptr;//throw invalid_argument("empty root");
         
         queue<Node*> level;
         
@@ -30,26 +28,19 @@ public:
         
         while(!level.empty())
         {
-            int levelSize = level.size();
-            
-            Node* prev = level.front();level.pop();;
-            if(prev->left) level.push(prev->left);
-            if(prev->right) level.push(prev->right);
-
-            while(--levelSize > 0)
+            int size = level.size();
+            Node * next = nullptr;
+            while(size-->0)
             {
-                auto current = level.front();level.pop();  
+                Node * current = level.front(); level.pop();
+                current->next = next;
+                next = current;
                 
+                if(current->right) level.push(current->right);//front right to left
                 if(current->left) level.push(current->left);
-                if(current->right) level.push(current->right);
-                
-                prev->next = current;
-                prev = current;
             }
-            prev->next = nullptr;
         }
         
         return root;
-        
     }
 };
