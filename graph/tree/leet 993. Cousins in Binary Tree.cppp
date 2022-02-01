@@ -1,0 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool isCousins(TreeNode* root, int x, int y)
+    {
+        /*
+        BFS : if x,y are in the same level
+        */
+        
+        queue<TreeNode*> level;
+        if(root) level.push(root);
+        
+        while(!level.empty())
+        {
+            int size = level.size();
+            
+            bool foundX = false;
+            bool foundY = false;
+            
+            while(size-->0)
+            {
+                auto * current = level.front();level.pop();
+                
+                if(current->val == x) foundX = true;
+                else if(current->val == y) foundY = true;
+                
+                if(current->left) level.push(current->left);
+                if(current->right) level.push(current->right);
+            }
+            
+            if(foundX||foundY) return foundY && foundX;
+        }
+        
+        return false;
+        
+        
+    }
+};  
