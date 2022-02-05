@@ -1,42 +1,110 @@
 class Solution {
-struct Node
-{
-    unordered_set<int> _postRequests;
-    unordered_set<int> _preRequests;
-};
-    
 public:
-    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        unordered_map<int, Node> jobTree;
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) //O(E + V)
+    {
+        /*BFS*/
+        unordered_map<int, unordered_set<int>> postRequests;
+        vector<int> preReqeustsCounts(numCourses, 0);
+        unordered_set<int> done;
         
-        for(const auto prerequisite : prerequisites)
+        for(const auto & prerequisite :  prerequisites)
         {
-            jobTree[prerequisite[0]]._preRequests.insert(prerequisite[1]);              
-            jobTree[prerequisite[1]]._postRequests.insert(prerequisite[0]);
+            if(postRequests[prerequisite[0]].insert(prerequisite[1]).second)
+                ++preReqeustsCounts[prerequisite[1]];
         }
         
-        while(!jobTree.empty())
+        queue<int> toDo;
+        
+        for(int course = 0; course < numCourses; ++course)
         {
-            bool findDoAbleTask = false;
-            for(const auto & [current, node] : jobTree)   
+            if(preReqeustsCounts[course] == 0)
             {
-                if(node._preRequests.empty())
+                toDo.push(course);
+            }
+        }
+        
+        while(!toDo.empty())//O(V)
+        {
+            int current = toDo.front();toDo.pop();
+            
+            done.insert(current);
+            
+            for(const auto & postRequest : postRequests[current])//O(E)
+            {
+                //if(!done.count(postRequest))
                 {
-                    for(auto postRequest : node._postRequests)
+                    if(--preReqeustsCounts[postRequest] == 0)
                     {
-                        jobTree[postRequest]._preRequests.erase(current);
-                        cout<<jobTree[postRequest]._preRequests.size()<<endl;
-                        
+                        toDo.push(postRequest);
                     }
-                    findDoAbleTask = true;
-                    jobTree.erase(current);
-                    break;//---------> attention the for is on this job tree, here we erase and the for will crash 
                 }
             }
-            if(!findDoAbleTask) return false;
+        }
+        return done.size() == numCourses;                            
+    }
+    
+    bool canFinish_DFS(int numCourses, vector<vector<int>>& prerequisites) 
+    {
+        /*
+        If circle : 
+        - scan one by one with DFS, mark visited, find already visited DURING a dfs means a cycle
+        */
+        
+        unordered_map<int, unordered_set<int>> prerequests;
+        unordered_set<int> done;
+
+        
+        for(const auto & prerequisite :  prerequisites)
+        {
+            prerequests[prerequisite[0]].insert(prerequisite[1]);
+        }
+            
+        for(const auto & [node, requests] : prerequests)
+        {
+            if(!done.count(node))
+            {
+                if(haveCycle(node, done, prerequests))
+                {
+                    return false;
+                }
+            }
         }
         
         return true;
     }
     
+    bool haveCycle(int current, 
+                   unordered_set<int> & done, 
+                   const unordered_map<int, unordered_set<int>> & prerequests)
+    {
+        unordered_set<int> toDo;
+        return dfs(current, done, toDo, prerequests);
+    }
+    
+    bool dfs(int current, 
+             unordered_set<int> & done,
+             unordered_set<int> & toDo, 
+             const unordered_map<int, unordered_set<int>> & prerequests)
+    {
+        if(!done.count(current))
+        {
+            if(toDo.count(current)) return true;
+
+            toDo.insert(current);
+
+            auto it = prerequests.find(current);
+            if(it!=prerequests.end())
+            {
+                for(const auto & prerequest : it->second)
+                {
+                    if(dfs(prerequest, done, toDo, prerequests))
+                    {
+                        return true;
+                    }
+                }
+            }
+            done.insert(current);
+        }
+        return false;
+    }
 };
