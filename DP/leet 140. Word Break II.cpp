@@ -18,7 +18,7 @@ public:
         if(it!=memory.end()) return it->second;
         
         vector<string> breaked;
-        if(dict.count(s)) breaked.push_back(s);
+        if(dict.count(s)) breaked.push_back(s);//attention!!!!!!!!
         string current;
         for(const auto & c : s)
         {
