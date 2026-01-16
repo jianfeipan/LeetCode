@@ -6,7 +6,7 @@ public:
     
 private:
     
-    vector<int> twoSum_note_then_check(vector<int> nums, int target) // not working well for duplicated numbs
+    vector<int> twoSum_hash_map_check(vector<int> nums, int target) 
     {
         unordered_map<int, int> valueToIndex;
         for(int i = 0; i<nums.size(); ++i)
@@ -19,7 +19,7 @@ private:
         return {};//or throw an exception "not found" 
     }
     
-    vector<int> twoSum_sorted(vector<int> nums, int target) // not working well for duplicated numbs
+    vector<int> twoSum_sorted_two_pinter(vector<int> nums, int target) 
     {
         map<int, int> valueToIndex;
         for(size_t i = 0; i<nums.size(); ++i)
