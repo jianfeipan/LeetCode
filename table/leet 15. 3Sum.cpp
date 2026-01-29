@@ -38,6 +38,41 @@ private:
         }
         return vector<vector<int>>(triplets.begin(),triplets.end());
     }
+
+
+      //the problem with middle move is the duplicaiton problem, 
+    // by moving the middle one, you always have left and right  and you cannot easily avoid duplications
+    // the the solution is to move the left one, and for the left, since you are going to search all the right range, 
+    // you can pass the ones with same number
+    vector<vector<int>> threeSum_fix_middle_not_working_because_of_duplication(vector<int>& nums) {
+        // sort then pointers to move to 0 in two levels of loops
+        std::sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+
+        for(int middle = 1; middle<nums.size() -1; ++middle){
+            int left = 0; 
+            int right = nums.size() -1;
+            while(left<middle && middle < right){
+                int sum = nums[left] + nums[middle] + nums[right];
+                if(sum == 0){
+                    res.push_back(vector<int>{nums[left], nums[middle], nums[right]});
+                    ++left;
+                    --right;
+                }else if(sum < 0){
+                    ++left;
+                }else{//sum > 0
+                    --right;
+                }
+            }
+        }//O(n^2)
+        
+        //to avoid duplications: 
+        //if the middle one is different, then it should be different
+
+        return res;
+
+    }
+
     
     
     vector<vector<int>> threeSum_sort_fixed_one_then_2sum(vector<int> nums) // O(N^2 * logN)
