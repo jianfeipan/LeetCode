@@ -1,8 +1,5 @@
 class Solution {
 public:
-
-class Solution {
-public:
     int lengthOfLongestSubstring(string s) {
         if(s.empty()) return 0;
         if(s.size() == 1) return 1;
@@ -36,10 +33,10 @@ public:
         // i need to go right remove the letters from set, util no more duplications
         return maxLen;
     }
-};
 
 
 
+// similar idea: but easyer to understand
     int lengthOfLongestSubstring(string s) 
     {
         int maxLen = 0;
