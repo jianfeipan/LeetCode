@@ -4,6 +4,26 @@ public:
      * @param heights: a vector of integers
      * @return: an integer
      */
+
+    //cleaner:
+
+    int maxArea(vector<int>& heights) {
+        int max_amount = 0;
+        int left = 0;
+        int right = heights.size()-1;
+        while(left < right){
+            const int current_area = (right - left)*min(heights[left], heights[right]);
+            max_amount = max(max_amount, current_area);
+            if(heights[left]<heights[right]){
+                ++left;
+            }else{
+                --right;
+            }
+        }
+        return max_amount;
+    }
+
+    
     int maxArea(vector<int> &heights) {
         /* 
             ides: use two pointers, one from left and another from right, the smaller one determin the volumn
