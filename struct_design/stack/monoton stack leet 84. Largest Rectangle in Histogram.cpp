@@ -7,52 +7,60 @@ public:
     
     int largestRectangleArea_based_on_every_height(vector<int>& heights) //O(N)
     {
-        /*
-        int the result, we definitly need to take at least one, so, let's see for every position, if we have to take this, what's the max : 
-            this i, will have hights[i] * (r - l +1) where from l to r, all the heights are bigger or equals to heights[i]
-        
-        */
-        
-        //the first step is to find the r, and l in two vectors by monoton stack!!!
-        
-        vector<int> leftLimits(heights.size(), 0);    
-        {
-            stack<pair<int, int>> leftMins; 
-            leftMins.push({-100, -1});//holder for always have a top : mark the start position of array
-            for(size_t i = 0; i<heights.size(); ++i)
-            {
-                while(!leftMins.empty() && leftMins.top().first >= heights[i]) 
-                {
-                    leftMins.pop();
+        //idea is to check every bar, how far it can go to left and how far go to right
+        // before meeting a smaller one, so the rectangle based on hight of this bar stops here
+        // index      0 1 2 3 4 5 
+        // hights    [7,1,7,2,2,4]
+        // left limit[0,0,2,2,2,5]
+        //right limit[0,5,2,5,5,5]
+        //so the max will be loop on the bars the surface is: currentHight * (rightlimit - leftLimit+1)
+        using Index=int;
+        const int n = heights.size();
+        vector<Index> leftLimits(n, -1);
+        {   
+            // 1 2 6 <-8.  after 1 2 6 8
+            // 1 2 6 8 <- 5 after 1 2 5
+            // 1 2 5 <-2.  after 1 2 
+            // monotonStack: 
+            //.    > top() : just push
+            //     == top(): nothing go next
+            //     < top() : while top is biger, pop, and we note the last biger one.
+
+            stack<Index> increasing;
+            for(int i = 0; i<n;++i){
+                while(!increasing.empty() && heights[i] <= heights[increasing.top()]){
+                    increasing.pop();
                 }
-
-                leftLimits[i] = leftMins.top().second;
-                leftMins.push({heights[i], i});
-                
+                if(!increasing.empty()){
+                    leftLimits[i] = increasing.top();
+                }
+                increasing.push(i);
             }
-            
         }
-        
-        vector<int> rightLimits(heights.size(), 0);
+        vector<Index> rightLimits(n, n);
         {
-            stack<pair<int, int>> rightMins; 
-            rightMins.push({-100, heights.size()});//holder for always have a top :mark the end position of array
-            for(int i = heights.size()-1; i>=0; --i)
-            {
-                while(!rightMins.empty() && rightMins.top().first >= heights[i]) rightMins.pop();
-
-                rightLimits[i] = rightMins.top().second;
-                rightMins.push({heights[i], i});
-            }            
+            stack<Index> increasing;
+            for(int i = n-1; i>=0;--i){
+                while(!increasing.empty() && heights[i] <= heights[increasing.top()]){
+                    increasing.pop();
+                }
+                if(!increasing.empty()){
+                    rightLimits[i] = increasing.top();
+                }
+                increasing.push(i);
+            }
         }
-        
+        // for(int left:leftLimits) cout<<left<<',';
+        // cout<<endl;
+        // for(int right:rightLimits) cout<<right<<',';
+        // cout<<endl;
 
-        int largest = INT_MIN;
-        for(size_t i = 0; i<heights.size(); ++i)
-        {
-           largest = max(largest, heights[i] * (rightLimits[i] - leftLimits[i] -1) );
+        int maxSurface = 0;
+        for(int i = 0; i<n; ++i){
+            maxSurface = max(maxSurface, 
+                             heights[i] * (rightLimits[i] - leftLimits[i] - 1));
         }
-        return largest;
+        return maxSurface;
     }
 
     
