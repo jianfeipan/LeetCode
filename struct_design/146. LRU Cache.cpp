@@ -52,56 +52,67 @@ idea:
 
 
 */
+class LRUCache {
+
+    /*
+    fact:
+        1. it's a cache, key value data structur is need:
+            -> unorded_map
+        2. Least recently Used: we need an ordered data structur to track the use order 
+            -> list: remove from middle push to front and remove the tail.   
+    */
+private:
+    using Key = int;
+    using Val = int;
+    using Order = list<pair<Key, Val>>;
+    
+    unordered_map<Key, Order::iterator> d_data;
+    Order d_mostRecent;
+    int d_capacity;
+
 public:
-    LRUCache(int capacity) :
-    m_data(), m_positions(), m_capacity(capacity)
-    {
+    LRUCache(int capacity) {
+        d_capacity = capacity;
     }
     
     int get(int key) {
-        auto it = m_data.find(key);
-        if(m_data.end() != it)
+        if(d_data.contains(key)) 
         {
-            const auto value = it->second.first;
-            auto pos = it->second.second;
-            m_positions.erase(pos);
-            m_data[key] = std::make_pair(value, m_positions.insert(m_positions.end(), key));
-
-            return value;
+            // move this element to the most recent front
+            // which means we need to access it directly
+            auto val = d_data[key]->second;
+            d_mostRecent.erase(d_data[key]);
+            d_mostRecent.push_front({key, val});
+            d_data[key] = d_mostRecent.begin();
+            return val;
         }
         return -1;
     }
     
     void put(int key, int value) {
-        
-        auto it = m_data.find(key);
-        if(m_data.end() == it) //insert 
+        if(d_data.contains(key))
         {
-            --m_capacity;
+            d_mostRecent.erase(d_data[key]);
         }
-        else //update
+        else
         {
-            auto pos = it->second.second;
-            m_positions.erase(pos);
+            if(d_capacity == 0) 
+            {
+                //eviction
+                auto itToEvict = d_mostRecent.rbegin();
+                const auto & keyToEvict = itToEvict->first;
+                d_data.erase(keyToEvict);
+                d_mostRecent.pop_back();
+            }
+            else{
+                --d_capacity;
+            }
         }
-        m_data[key] = std::make_pair(value, m_positions.insert(m_positions.end(), key));
-
-
-        if(m_capacity<0)//Eviction
-        {
-            auto toEvict = m_positions.front();
-            m_data.erase(toEvict);
-            m_positions.pop_front();
-            ++m_capacity;
-        }
-        
+        d_mostRecent.push_front({key,value});
+        d_data[key] = d_mostRecent.begin();
     }
-
-private:
-    std::unordered_map<int, std::pair<int, std::list<int>::iterator>> m_data;
-    std::list<int> m_positions; // front is least recently used
-    int m_capacity;
 };
+
 
 /**
  * Your LRUCache object will be instantiated and called as such:
