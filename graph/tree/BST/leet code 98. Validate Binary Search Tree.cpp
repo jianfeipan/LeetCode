@@ -9,25 +9,24 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+
 class Solution {
 public:
-    bool isValidBST(TreeNode* root) 
+    // rules: all left nodes are smaller than root, all right nodes are bigger
+    // (leftLimit, rightLimit)
+    // time O(N) space O(N)
+    bool _isValidBST(TreeNode* current, int leftLimit, int rightLimit)
     {
-        return isValidBST(root, nullptr, nullptr);
+        if(!current) return true;
+        if(leftLimit < current->val && current->val < rightLimit)
+        {
+            return _isValidBST(current->left, leftLimit, current->val) 
+                && _isValidBST(current->right, current->val, rightLimit);
+        }
+        return false;
     }
     
-    bool isValidBST(TreeNode * root, TreeNode * leftLimit, TreeNode * rightLimit)
-    {
-        if(!root) return true;
-        
-        if( (leftLimit && root->val <= leftLimit->val) || (rightLimit && root->val >= rightLimit->val) ) return false;
-        
-        if(!isValidBST(root->left, leftLimit, root) )  return false;
-
-        if(!isValidBST(root->right, root, rightLimit) ) return false;
-        
-        return true;
+    bool isValidBST(TreeNode* root) {
+        return _isValidBST(root, INT_MIN, INT_MAX);
     }
-
-    
 };
