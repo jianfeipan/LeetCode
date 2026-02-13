@@ -120,3 +120,48 @@ public:
         return subsetsWithDup_recursive(nums);
     }
 };
+
+
+class Solution_2026
+{
+/*
+permution or subset, always back track is a easier way: 
+    from index, use it or not use it, r use which number,
+    then dfs to the end then pop back to come to the prev state
+
+for duplication
+*/
+
+private:
+    void _subsetsWithDup(const vector<int>& nums, vector<vector<int>> & res, int index, vector<int>& current )
+    {
+        if(index == nums.size()){
+            res.push_back(current);
+            return;
+        }
+
+        // use current number
+        current.push_back(nums[index]);
+        _subsetsWithDup(nums, res, index+1, current);
+        current.pop_back();
+        // duplications!!!!!!
+        //since duplications, if we don't use this, we need skip all duplications
+        while(nums[index+1] == nums[index]){
+            ++index;
+        }
+
+        // skip current number
+        _subsetsWithDup(nums, res, index+1, current);
+
+    }
+public:
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) 
+    {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+        vector<int> current;
+        _subsetsWithDup(nums, res, 0, current);
+        return res;
+    }
+};
+
