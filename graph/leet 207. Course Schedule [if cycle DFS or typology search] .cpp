@@ -56,53 +56,37 @@ public:
 
 class Solution {
 
-/*
-a simplified version of above version,
-the core prblem is to find out if any task doesn't have any dependency
-the simulated way is keep tracking and update the set of deps,
-actually we can just use a counter of deps to do that, without update any deps set
- and think it in a reversed way: how many node do I block
-*/
-public:
-    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<int> blocks(numCourses, 0);
-        vector<vector<int>> depends(numCourses);
+vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
 
-        for (auto& pre : prerequisites) {
-            blocks[pre[1]]++; // one more task is blocked by me
-            depends[pre[0]].push_back(pre[1]);
+        vector<vector<int>> blocks(numCourses, vector<int>());
+        vector<int> deps(numCourses, 0);
+        for(const auto& pre : prerequisites){
+            ++deps[pre[0]];
+            blocks[pre[1]].push_back(pre[0]);
         }
 
         queue<int> q;
-        for (int i = 0; i < numCourses; ++i) {
-            if (blocks[i] == 0) {
-                q.push(i); // these nodes don't block any task, they are the final nodes
+        for(int i=0; i<numCourses; ++i){
+            if(deps[i]==0){
+                q.push(i);
             }
         }
-
-        int done = 0;
-        while (!q.empty()) {
-            int node = q.front();
+        int processed = 0;
+        while(!q.empty()){
+            int done = q.front();
             q.pop();
-            done++;
-            for (int dep : depends[node]) {
-                blocks[dep]--; 
-                // if q is not there, all it deps blocks one less node
-                if (blocks[dep] == 0) {
-                    q.push(dep);
-                    // if this dependent task doesn't block any task
-                    // this become another final task
+            ++processed;
+    
+            for(int beingBlocked : blocks[done]){
+                --deps[beingBlocked];
+                if(deps[beingBlocked] == 0){
+                    q.push(beingBlocked);
                 }
-                // so when there is a cycle, the nodes in the cycle will 
-                // NEVER become blocks[num] == 0, because it always block some other task
-                // so no taks in the q and we stop the loop
             }
         }
-        return done == numCourses;
+        return processed==numCourses;
     }
 };
-
-
 
 class Solution_DFS {
 
