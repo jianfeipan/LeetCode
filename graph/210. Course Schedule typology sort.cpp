@@ -1,46 +1,38 @@
 class Solution {
 public:
-    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites)
-    {
-        /*
-        Typological sort
-        BFS
-        
-        */
-        unordered_map<int, unordered_set<int>> nextSteps;
-        vector<int> preRequestCounts(numCourses, 0);
-        
-        for(const auto & prerequisite : prerequisites)
-        {
-            if(nextSteps[prerequisite[1]].insert(prerequisite[0]).second)//avoid duplications
-                ++preRequestCounts[prerequisite[0]];
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<int> order;
+        order.reserve(numCourses);
+
+        vector<vector<int>> blocks(numCourses, vector<int>());
+        vector<int> deps(numCourses, 0);
+        for(const auto& pre : prerequisites){
+            ++deps[pre[0]];
+            blocks[pre[1]].push_back(pre[0]);
         }
-        
-        vector<int> coursesOrder;coursesOrder.reserve(numCourses);
-        queue<int> toDo;
-        
-        for(int course = 0; course < numCourses; ++course)
-        {
-            if(preRequestCounts[course] == 0)
-            {
-                toDo.push(course);
+
+        queue<int> q;
+        for(int i=0; i<numCourses; ++i){
+            if(deps[i]==0){
+                q.push(i);
             }
         }
-        
-        while(!toDo.empty())
-        {
-            int currentCourse = toDo.front();toDo.pop();
-            coursesOrder.push_back(currentCourse);
-            
-            for(const auto & nextStep : nextSteps[currentCourse])
-            {
-                if(--preRequestCounts[nextStep] == 0)
-                {
-                    toDo.push(nextStep);
+        while(!q.empty()){
+            int done = q.front();
+            q.pop();
+            order.push_back(done);
+
+            for(int beingBlocked : blocks[done]){
+                --deps[beingBlocked];
+                if(deps[beingBlocked] == 0){
+                    q.push(beingBlocked);
                 }
             }
         }
-        if(coursesOrder.size() == numCourses) return coursesOrder;
-        else return {};//cycle case
+
+        if(order.size() < numCourses) {
+            order.clear();
+        }
+        return  order;
     }
 };
