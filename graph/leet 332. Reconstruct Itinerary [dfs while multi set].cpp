@@ -46,15 +46,28 @@ static void print(const std::vector<T> & v)
 
 void visit(string airport, map<string, multiset<string>> & outComes, vector<string> & route)
 {
-
-
    while (outComes[airport].size()) {
       string next = *outComes[airport].begin();
       outComes[airport].erase(outComes[airport].begin());
       visit(next, outComes, route);
-
    }
-   route.push_back(airport);
+   route.push_back(airport);// this is very useful to inseart after the recursive call
+   // for exmaple : { "JFK", "AAA" }, {"JFK", "NRT"}, {"NRT", "JFK"} 
+   // or            { "JFK", "ZZZ" }, {"JFK", "NRT"}, {"NRT", "JFK"} 
+   // we need to make sure J to N then back to J is in the begining
+   // visit J {A N}
+   //           visit A { nothing} : push A
+   //           visit N {J }
+   //                   visit J {nothing} push J
+   //           push N
+   // Push J
+
+   // -> [A, J, N, J]
+
+   // the while loop is magic: like who doesn't next firstly, will be put in the begining
+   // then the final result is inversed
+         
+   
 }
 
 vector<string> findItinerary(vector<vector<string>>& tickets)
@@ -91,3 +104,54 @@ int main()
    }
    return 0;
 }
+
+// multi set is really very unusual data structure, the map+couter is also doing the job
+// but, the counter maganism is missing a way to search the left ticket, so here are other code detecting if we finished, if we have the next,
+// and we need a bakck track because we are not sure the current path is the good one.
+// but with the while loop and the psuh_back after recursive call, we don't need all these...
+
+
+class Solution {
+private:
+    bool _dfs(map<string, map<string, int>>& fromTo,
+        vector<string>& iteration, int& leftTickets
+        ){
+        const auto& current = iteration.back();
+        if(!fromTo.contains(current)){
+
+            return leftTickets == 0;// all tickets used, found!
+        }
+
+        for(auto& to:fromTo[current]){
+            //all destinations from current 
+            if(to.second>0)//not visted
+            {
+                --to.second;
+                iteration.push_back(to.first);
+                --leftTickets;
+                if(_dfs(fromTo, iteration, leftTickets))
+                    return true;
+                iteration.pop_back();// if last path not working, back track
+                ++to.second;    
+                ++leftTickets;            
+            }
+        }
+        return leftTickets ==0;// false
+    }
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        map<string, map<string, int>> fromTo;
+        for(const auto& ticket:tickets){
+            ++fromTo[ticket[0]][ticket[1]];
+        }
+
+        vector<string> iteration; 
+        iteration.reserve(tickets.size()+1);
+        iteration.push_back("JFK");
+        int leftTickets = tickets.size();
+        _dfs(fromTo, iteration, leftTickets);
+        return iteration;
+    }
+};
+
+
